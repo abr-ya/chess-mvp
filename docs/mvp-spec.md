@@ -507,6 +507,7 @@ The MVP is complete when:
 
 ## 11. Open Questions
 
+- Authentication provider decision is described separately in [Authentication System Options](./auth-options.md).
 - Should guest mode be part of the first MVP, or should all games require registered users?
 - Should human games be rated by default?
 - Should draw offers be included in the MVP?
