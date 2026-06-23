@@ -15,6 +15,8 @@ The MVP should deliver a reliable game loop. Every later phase should build on t
 
 ## Phase 1. MVP Core
 
+Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md)
+
 - [ ] Basic registration and sign-in.
 - [ ] User and rating models.
 - [ ] Game model in the database.

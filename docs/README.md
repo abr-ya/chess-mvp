@@ -5,6 +5,7 @@ Initial product documentation for the chess platform MVP.
 - [MVP Specification](./mvp-spec.md)
 - [Authentication System Options](./auth-options.md)
 - [Architecture Plan](./architecture-plan.md)
+- [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md)
 - [Future Backlog](./backlog.md)
 
 ## Working Assumptions
