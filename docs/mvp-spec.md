@@ -508,9 +508,9 @@ The MVP is complete when:
 ## 11. Open Questions
 
 - Authentication provider decision is described separately in [Authentication System Options](./auth-options.md).
+- Technology stack and first implementation architecture are described separately in [Architecture Plan](./architecture-plan.md).
 - Should guest mode be part of the first MVP, or should all games require registered users?
 - Should human games be rated by default?
 - Should draw offers be included in the MVP?
 - Should public viewing of other users' completed games be allowed?
-- Which technology stack should be used for the first browser MVP?
 - Should the MVP be English-only, Russian-only, or bilingual from the start?

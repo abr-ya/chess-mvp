@@ -4,6 +4,7 @@ Initial product documentation for the chess platform MVP.
 
 - [MVP Specification](./mvp-spec.md)
 - [Authentication System Options](./auth-options.md)
+- [Architecture Plan](./architecture-plan.md)
 - [Future Backlog](./backlog.md)
 
 ## Working Assumptions
@@ -16,4 +17,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Choose the technology stack and create the architecture plan for the first implementation increment: chessboard UI, server-side game model, WebSocket synchronization, and play against an engine.
+Scaffold the application with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and the initial domain package layout.

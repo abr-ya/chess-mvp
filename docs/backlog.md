@@ -6,12 +6,12 @@ The MVP should deliver a reliable game loop. Every later phase should build on t
 
 ## Phase 0. Project Setup
 
-- [ ] Choose the frontend, backend, database, and real-time transport stack.
-- [ ] Create the service architecture diagram.
-- [ ] Choose the chess rules library.
-- [ ] Choose the engine integration approach.
-- [ ] Define API contracts for game creation, moves, game state, history, and PGN.
-- [ ] Create the basic screen design.
+- [x] Choose the frontend, backend, database, and real-time transport stack.
+- [x] Create the service architecture diagram.
+- [x] Choose the chess rules library.
+- [x] Choose the engine integration approach.
+- [x] Define API contracts for game creation, moves, game state, history, and PGN.
+- [x] Create the basic screen design.
 
 ## Phase 1. MVP Core
 
@@ -166,4 +166,4 @@ The MVP should deliver a reliable game loop. Every later phase should build on t
 
 ## Next Task
 
-Move to Phase 0: choose the technology stack and document the architecture plan for the first working increment.
+Scaffold the application with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and the initial domain package layout.
