@@ -103,6 +103,20 @@ Computer strength must be controllable through:
 
 For the MVP, it is acceptable to use an existing chess engine, such as Stockfish through a server process or WebAssembly. The engine must be isolated behind an internal interface so the implementation can be replaced later.
 
+### 4.2.1 Early Position Analysis
+
+Position and game analysis are important to the product and should enter the MVP as early as the foundation allows.
+
+The first analysis approximation should support:
+
+- opening a simple analysis screen;
+- setting up a position or importing a FEN string;
+- validating the position before analysis;
+- running a bounded engine evaluation;
+- showing the evaluation score and at least one suggested best line.
+
+This first version does not need full move classification, evaluation graphs, or deep post-game reports. It should prove the analysis loop with clear limits before expanding into full game analysis.
+
 ### 4.3 Play Against Human Online
 
 A user can:
@@ -474,13 +488,14 @@ Included in the MVP:
 - Elo rating;
 - PGN;
 - game history;
-- completed game review.
+- completed game review;
+- early position analysis with FEN setup/import and bounded engine evaluation.
 
 Not included in the MVP:
 
 - full public matchmaking;
 - tournaments;
-- post-game engine analysis;
+- full post-game engine analysis with move classification and evaluation graph;
 - puzzles;
 - chat;
 - anti-cheat;

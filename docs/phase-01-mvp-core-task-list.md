@@ -1,6 +1,6 @@
 # Phase 01 MVP Core Task List
 
-This task list expands Phase 1 from the main backlog into executable slices. It should be completed before moving to chess engine play, time controls, online invite games, PGN history polish, or analysis.
+This task list expands Phase 1 from the main backlog into executable slices. It should be completed before moving to chess engine play, early position analysis, time controls, online invite games, or PGN history polish.
 
 ## Phase Goal
 
@@ -12,7 +12,7 @@ Deliver the first reliable authenticated chess game loop foundation:
 - the server validates legal chess moves with `chess.js`;
 - the browser can show a playable chessboard and SAN move list;
 - games can finish by core chess rules;
-- the implementation is ready for Phase 2 computer replies without changing the core game model.
+- the implementation is ready for Phase 2 computer replies and early position analysis without changing the core game model.
 
 ## Stop Point
 
@@ -20,20 +20,23 @@ Stop Phase 1 when a signed-in user can create or open a basic game screen, make 
 
 Do not start these items in Phase 1:
 
-- Stockfish or other engine integration;
+- Stockfish or other engine integration, except for planning the `EngineService` and early analysis boundaries;
 - live human invite games;
 - Socket.IO synchronization;
 - real clock enforcement;
 - rating updates after completed games;
 - full PGN export and game history UI.
 
+After Phase 1, prioritize the smallest useful engine slice before broader online play: a minimal `EngineService`, computer reply moves, and a first analysis screen that accepts or sets up a FEN position and returns a bounded evaluation.
+
 ## Assumptions
 
-- App stack follows `docs/architecture-plan.md`: Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Prisma, PostgreSQL, Clerk, and `chess.js`.
+- App stack follows `docs/architecture-plan.md`: Next.js 16.2.9 App Router, TypeScript, Tailwind CSS, shadcn/ui, Prisma 7.8.0, PostgreSQL, Clerk, and `chess.js`.
 - The UI language is English unless a later decision changes it.
 - The domain model uses internal `User.id` values, not provider user IDs.
 - Server-side chess validation is authoritative; the client may only provide UI hints.
 - The first game flow can be a local/manual board flow without computer replies.
+- Core framework and ORM versions should be pinned exactly. Stable non-breaking Next.js and Prisma updates are allowed as intentional maintenance tasks, but canary/pre-release or breaking upgrades should not be absorbed into unrelated MVP work.
 
 ## 01. Project Scaffold
 
@@ -76,9 +79,11 @@ Playwright should be added when the first real browser game flow exists, likely 
 
 Local user synchronization path: `getCurrentUserIdentity()` returns a trimmed Clerk identity for server code. Phase 05 should upsert the local `User`, `UserAuthIdentity`, and default `Rating` from that helper before game creation. Game and rating records must reference internal `User.id` values, while Clerk user IDs stay inside `UserAuthIdentity`.
 
+Clerk webhook dependency: Phase 1 must work without Clerk webhooks. The local user upsert should happen on demand from the authenticated session before protected game actions, so local development and Vercel preview/production deployments do not require a public webhook endpoint, custom domain, SSL setup, or ngrok-style tunnel for the core MVP loop. Webhooks may be added after deployment for profile refresh and deletion reconciliation, but they are not required for sign-in, game creation, result persistence, or game history.
+
 ## 04. Prisma and Database Foundation
 
-- [ ] Initialize Prisma.
+- [ ] Initialize Prisma 7.8.0.
 - [ ] Add PostgreSQL connection configuration through environment variables.
 - [ ] Create the initial Prisma schema.
 - [ ] Add `User`.
@@ -97,6 +102,7 @@ Local user synchronization path: `getCurrentUserIdentity()` returns a trimmed Cl
 ## 05. User and Rating Models
 
 - [ ] Implement local user creation or upsert from Clerk identity.
+- [ ] Ensure local user upsert does not depend on Clerk webhooks.
 - [ ] Store email, display name, avatar URL, and last seen timestamp.
 - [ ] Create default rating records for new users.
 - [ ] Use a starting rating of 1200.

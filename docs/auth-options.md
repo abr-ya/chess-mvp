@@ -22,6 +22,7 @@ The recommended MVP direction is:
 - use a managed or well-established authentication system;
 - store a local application `User` record in our database;
 - link the local user to the external auth identity;
+- create or update the local user on demand during authenticated server actions;
 - require Google sign-in support;
 - keep Facebook sign-in optional until after the MVP.
 
@@ -36,6 +37,8 @@ The MVP should support:
 - stable internal `userId` used by games, ratings, and history;
 - sign-out;
 - session validation for API and WebSocket requests.
+
+The MVP must not depend on auth provider webhooks for the core game loop. A missing or disabled webhook endpoint must not prevent a signed-in user from creating a local profile, starting a game, saving a result, or seeing game history.
 
 The MVP may postpone:
 
@@ -200,12 +203,33 @@ For the first MVP, choose one of these paths:
 
 Facebook sign-in should be treated as post-MVP unless there is a clear audience reason to include it immediately. Google is usually enough for the first social-login path and has lower product complexity.
 
+## Clerk Without Required Webhooks
+
+For the MVP, Clerk webhooks are optional. The application can work locally and on Vercel without a public webhook endpoint, custom domain, or local HTTPS tunnel.
+
+The required MVP flow is:
+
+- Clerk handles sign-in, sign-out, and session validation.
+- Server code reads the authenticated Clerk identity from the active session.
+- A shared helper, such as `ensureLocalUser()`, finds or creates the local `User`, `UserAuthIdentity`, and default `Rating` before protected game actions.
+- Game, rating, participant, and history records use the internal `User.id`, not the Clerk user ID.
+
+This on-demand synchronization should run before actions such as creating a game, opening authenticated game history, or entering any flow that needs a local domain user. It makes the synchronous product flow independent from webhook delivery timing.
+
+Webhooks can be added after the MVP is deployed with a stable public HTTPS URL. Their later role should be production hardening:
+
+- refresh local display name, email, and avatar data after Clerk profile updates;
+- mark or reconcile local users after Clerk account deletion;
+- support future admin or social features that need broader user synchronization.
+
+Webhook failures should be handled as sync issues, not as authentication or gameplay outages.
+
 ## Architecture Notes
 
 - The chess domain must use the internal `User.id`, not the external provider ID.
 - Games, ratings, participants, and history should reference the internal user ID.
 - WebSocket authentication must validate the same session/token as HTTP requests.
-- Auth provider webhooks should create or update the local user profile.
+- Auth provider webhooks are optional for the MVP; the app should create or update the local user on demand from the active authenticated session.
 - If the provider is changed later, game history should remain attached to the same internal users.
 
 ## Open Questions

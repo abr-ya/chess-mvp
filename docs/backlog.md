@@ -26,7 +26,7 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 - [ ] Game completion by checkmate, stalemate, and impossible continuation.
 - [ ] Position and move persistence.
 
-## Phase 2. Play Against Computer
+## Phase 2. Play Against Computer and Early Analysis
 
 - [ ] Chess engine integration.
 - [ ] Difficulty-level adapter.
@@ -35,6 +35,11 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 - [ ] Calculation time limit.
 - [ ] Rating calculation against the computer's estimated Elo.
 - [ ] Engine error handling without losing the game.
+- [ ] Minimal analysis screen.
+- [ ] FEN input or position setup for analysis.
+- [ ] Position validation before analysis.
+- [ ] Bounded Stockfish evaluation for a single position.
+- [ ] Show score and at least one suggested best line.
 
 ## Phase 3. Time Controls
 
@@ -81,6 +86,7 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 
 ## Phase 7. Game Analysis
 
+- [ ] Build on the early analysis slice instead of adding a second engine integration.
 - [ ] Run engine analysis after game completion.
 - [ ] Position evaluation after each move.
 - [ ] Best move and missed opportunity.

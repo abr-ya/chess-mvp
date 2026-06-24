@@ -6,16 +6,28 @@ The first implementation should be a TypeScript web application with a server-au
 
 Recommended MVP stack:
 
-- Frontend and HTTP API: Next.js App Router with TypeScript.
+- Frontend and HTTP API: Next.js 16.2.9 App Router with TypeScript.
 - Styling and UI primitives: Tailwind CSS with shadcn/ui as the local component layer.
 - Authentication: Clerk for the fastest MVP path, with a local `User` record linked to the external identity.
 - Database: PostgreSQL.
-- ORM and migrations: Prisma ORM.
+- ORM and migrations: Prisma ORM 7.8.0.
 - Real-time transport: Socket.IO on a dedicated Node.js real-time server process.
 - Chess rules: `chess.js` on the server for move validation, SAN, FEN, and game-over detection.
 - Chessboard UI: a React chessboard component wrapped behind a local `ChessboardView` component.
-- Engine integration: Stockfish behind an internal `EngineService` adapter, initially as a server-side process or WASM worker.
+- Engine integration and analysis: Stockfish behind an internal `EngineService` adapter, initially as a server-side process or WASM worker.
 - Testing: Vitest for domain services, Playwright for browser game flows.
+
+## Version Policy
+
+The MVP should use pinned stable versions for core framework and database tooling:
+
+- Next.js: `16.2.9`;
+- Prisma CLI and `@prisma/client`: `7.8.0`;
+- Database: PostgreSQL, with the concrete hosted/local version documented when the deployment target is chosen.
+
+The project may update to newer stable Next.js or Prisma releases as they become available, but updates should be intentional and verified. Patch and minor updates are acceptable when they do not introduce breaking changes for the features the MVP uses. Major upgrades, canary releases, release candidates, or changes with documented breaking behavior should be treated as separate upgrade tasks with migration notes and validation.
+
+Do not leave core framework dependencies on floating `latest` ranges in `package.json`; pin exact versions so local development, CI, and Vercel builds stay reproducible.
 
 ## Why This Stack
 
@@ -31,7 +43,17 @@ Socket.IO is preferred over raw WebSocket for the first MVP because it gives a s
 
 `chess.js` is the server-side chess rules dependency. The client can use it for optimistic hints, but every accepted move must be validated by the server.
 
-Stockfish must not leak into controllers or UI components. It should live behind an adapter that accepts a position, level settings, and a time budget, then returns a candidate move.
+Stockfish must not leak into controllers or UI components. It should live behind an adapter that accepts a position, level settings, and a time budget, then returns a candidate move or position evaluation.
+
+## Chess Library Boundaries
+
+The chess-specific dependencies should stay isolated behind local application interfaces:
+
+- `chess.js` is the rules and notation library. It owns legal move validation, turn rules, SAN, FEN loading/export, and game-over checks.
+- The React chessboard package is a view dependency only. It must be wrapped by `ChessboardView`, which receives FEN, orientation, legal UI hints, and move callbacks. Pages and services should not depend directly on the package API.
+- Stockfish is the engine dependency. It must be wrapped by `EngineService`, which can support both engine moves and position analysis.
+
+The exact React chessboard package should be selected during the browser chessboard task after checking current maintenance status and React 19 / Next.js 16 compatibility. The exact Stockfish package, binary, or WASM strategy should be selected during engine implementation.
 
 ## Service Architecture
 
@@ -107,7 +129,20 @@ Responsible for:
 - translating level names into engine constraints;
 - enforcing search depth and move-time limits;
 - returning legal UCI moves;
+- evaluating a single position from FEN;
+- returning a best line or principal variation when available;
 - failing gracefully without corrupting game state.
+
+### Analysis Service
+
+Early analysis should reuse `EngineService` instead of creating a second engine integration. The first approximation should support:
+
+- entering or importing a FEN position;
+- validating the position with `chess.js`;
+- asking Stockfish for a bounded evaluation;
+- showing side-to-move, centipawn or mate score, and the top suggested line.
+
+Full game analysis can build on the same service later by analyzing each stored move and saving an analysis job separately from the game.
 
 ## First Increment
 
@@ -118,7 +153,8 @@ The first working increment should prove the complete single-player loop before 
 3. Implement the `GameService` with `chess.js` and unit tests.
 4. Build a local game screen with a chessboard, clocks, move list, and game status.
 5. Add a minimal engine adapter that can return a legal move for a selected level.
-6. Persist completed computer games and show them in a basic history page.
+6. Add a minimal position analysis screen that accepts a FEN, validates it, and returns a bounded Stockfish evaluation.
+7. Persist completed computer games and show them in a basic history page.
 
 Human invite games and Socket.IO synchronization should be the second implementation increment, after the server-side game model is already reliable.
 
