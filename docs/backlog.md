@@ -168,4 +168,4 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 
 ## Next Task
 
-Scaffold the application with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and the initial domain package layout.
+Start Phase 02 by tightening tooling and quality gates for domain service work.

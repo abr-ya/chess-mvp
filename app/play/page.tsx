@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function PlayPage() {
   return (
@@ -15,7 +16,7 @@ export default function PlayPage() {
           </p>
           <Link
             href="/games/example"
-            className="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-[#171717] px-5 text-sm font-semibold text-white transition hover:bg-[#35302a]"
+            className={buttonVariants({ className: "mt-8", size: "lg" })}
           >
             Open game shell
           </Link>

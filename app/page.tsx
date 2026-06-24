@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 const featureRows = [
   ["Mode", "Manual chess game foundation"],
@@ -40,13 +41,13 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/play"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[#171717] px-5 text-sm font-semibold text-white transition hover:bg-[#35302a]"
+                className={buttonVariants({ size: "lg" })}
               >
                 Start game
               </Link>
               <Link
                 href="/games/example"
-                className="inline-flex h-11 items-center justify-center rounded-md border border-[#b9ad99] px-5 text-sm font-semibold text-[#2a251f] transition hover:border-[#171717]"
+                className={buttonVariants({ variant: "outline", size: "lg" })}
               >
                 Open game shell
               </Link>

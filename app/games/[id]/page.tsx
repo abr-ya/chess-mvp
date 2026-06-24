@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+
 type GamePageProps = {
   params: Promise<{
     id: string;
@@ -22,7 +24,10 @@ export default async function GamePage({ params }: GamePageProps) {
         </div>
 
         <aside className="border-l border-[#d9d0c0] pl-6">
-          <h1 className="text-2xl font-semibold">Game shell</h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-2xl font-semibold">Game shell</h1>
+            <Badge variant="secondary">Phase 01</Badge>
+          </div>
           <dl className="mt-6 grid gap-4 text-sm">
             <div>
               <dt className="font-semibold text-[#766246]">Status</dt>

@@ -47,11 +47,11 @@ Do not start these items in Phase 1:
 
 ## 01-a. shadcn/ui Setup
 
-- [ ] Initialize shadcn/ui with the repository's chosen style settings.
-- [ ] Confirm generated shadcn configuration matches Tailwind CSS 4 and the current app structure.
-- [ ] Add the first practical UI primitives for the Phase 1 surface: `Button`, `Select`, `Table`, `Badge`, `Tooltip`, and `Separator`.
-- [ ] Replace temporary hand-styled action links with shared button styling where it helps consistency.
-- [ ] Confirm `npm run lint`, `npm run typecheck`, and `npm run test` still pass after shadcn setup.
+- [x] Initialize shadcn/ui with the repository's chosen style settings.
+- [x] Confirm generated shadcn configuration matches Tailwind CSS 4 and the current app structure.
+- [x] Add the first practical UI primitives for the Phase 1 surface: `Button`, `Select`, `Table`, `Badge`, `Tooltip`, and `Separator`.
+- [x] Replace temporary hand-styled action links with shared button styling where it helps consistency.
+- [x] Confirm `npm run lint`, `npm run typecheck`, and `npm run test` still pass after shadcn setup.
 
 ## 02. Tooling and Quality Gates
 
@@ -193,4 +193,4 @@ Do not start these items in Phase 1:
 
 ## Next Task
 
-Initialize shadcn/ui as Phase 01-a.
+Start Phase 02 by tightening tooling and quality gates for domain service work.

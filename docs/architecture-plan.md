@@ -23,6 +23,8 @@ Next.js gives the browser MVP a single TypeScript product surface for pages, aut
 
 shadcn/ui is a good fit because it copies accessible component code into the repository instead of hiding the UI behind a closed package API. The MVP should use it for application controls, forms, dialogs, tables, badges, tabs, sliders, switches, tooltips, and side panels. The chessboard itself remains a dedicated chess UI component wrapped by `ChessboardView`.
 
+The current shadcn/ui setup uses the `base-nova` style preset with Tailwind CSS 4, Lucide icons, and Base UI primitives. Future components should stay consistent with `components.json` unless there is a concrete accessibility or maintenance reason to migrate the local UI layer.
+
 PostgreSQL and Prisma are a conservative fit for structured game records, moves, ratings, users, and future analysis jobs. The database remains the system of record; PGN is stored as a generated artifact, not as the only game state.
 
 Socket.IO is preferred over raw WebSocket for the first MVP because it gives a stable event model, reconnect behavior, and room-style game subscriptions with less custom infrastructure. It should still be isolated behind a transport layer so it can be replaced later if needed.
@@ -229,4 +231,4 @@ shadcn/ui usage should stay practical and restrained:
 
 ## Next Task
 
-Scaffold the application with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and the initial domain package layout.
+Start Phase 02 by tightening tooling and quality gates for domain service work.
