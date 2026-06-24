@@ -55,12 +55,14 @@ Do not start these items in Phase 1:
 
 ## 02. Tooling and Quality Gates
 
-- [ ] Configure ESLint and TypeScript strictness suitable for the MVP.
-- [ ] Add Vitest for domain service tests.
-- [ ] Add a minimal test setup file if needed.
-- [ ] Add Playwright dependency or document it as the next browser-flow verification step.
-- [ ] Add initial CI-friendly commands to `package.json`.
-- [ ] Confirm `npm run lint`, `npm run typecheck`, and `npm run test` can run on the scaffold.
+- [x] Configure ESLint and TypeScript strictness suitable for the MVP.
+- [x] Add Vitest for domain service tests.
+- [x] Confirm a test setup file is not needed yet for current Node-only domain tests.
+- [x] Document Playwright as the next browser-flow verification step instead of adding it before an interactive game flow exists.
+- [x] Add initial CI-friendly commands to `package.json`.
+- [x] Confirm `npm run lint`, `npm run typecheck`, and `npm run test` can run on the scaffold.
+
+Playwright should be added when the first real browser game flow exists, likely after `/play` can create a game and `/games/[id]` can render a persisted game snapshot.
 
 ## 03. Authentication Shell
 
@@ -193,4 +195,4 @@ Do not start these items in Phase 1:
 
 ## Next Task
 
-Start Phase 02 by tightening tooling and quality gates for domain service work.
+Start Phase 03 by wiring the authentication shell with Clerk.

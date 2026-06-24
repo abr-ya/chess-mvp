@@ -168,4 +168,4 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 
 ## Next Task
 
-Start Phase 02 by tightening tooling and quality gates for domain service work.
+Start Phase 03 by wiring the authentication shell with Clerk.

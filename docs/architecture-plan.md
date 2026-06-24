@@ -231,4 +231,4 @@ shadcn/ui usage should stay practical and restrained:
 
 ## Next Task
 
-Start Phase 02 by tightening tooling and quality gates for domain service work.
+Start Phase 03 by wiring the authentication shell with Clerk.
