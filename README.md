@@ -9,8 +9,12 @@ Install dependencies and run the development server:
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
+
+Fill `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in
+`.env.local` before using protected routes such as `/play` and `/games/[id]`.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see
 the result.
@@ -23,8 +27,7 @@ npm run typecheck
 npm run test
 ```
 
-`npm run test` currently runs the TypeScript gate until Vitest is installed in
-the Phase 01 tooling step.
+`npm run test` runs the Vitest domain test suite.
 
 ## Project Docs
 

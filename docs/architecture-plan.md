@@ -231,4 +231,4 @@ shadcn/ui usage should stay practical and restrained:
 
 ## Next Task
 
-Start Phase 03 by wiring the authentication shell with Clerk.
+Start Phase 04 by initializing Prisma and the database foundation.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthActions } from "@/components/auth/auth-actions";
 import { buttonVariants } from "@/components/ui/button";
 
 const featureRows = [
@@ -17,12 +18,21 @@ export default function Home() {
             Chess MVP
           </Link>
           <nav className="flex items-center gap-4 text-sm font-medium text-[#5d5548]">
-            <Link href="/play" className="transition hover:text-[#171717]">
+            <Link
+              href="/play"
+              prefetch={false}
+              className="transition hover:text-[#171717]"
+            >
               Play
             </Link>
-            <Link href="/games/example" className="transition hover:text-[#171717]">
+            <Link
+              href="/games/example"
+              prefetch={false}
+              className="transition hover:text-[#171717]"
+            >
               Game
             </Link>
+            <AuthActions />
           </nav>
         </header>
 
@@ -41,12 +51,14 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/play"
+                prefetch={false}
                 className={buttonVariants({ size: "lg" })}
               >
                 Start game
               </Link>
               <Link
                 href="/games/example"
+                prefetch={false}
                 className={buttonVariants({ variant: "outline", size: "lg" })}
               >
                 Open game shell

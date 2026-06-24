@@ -66,13 +66,15 @@ Playwright should be added when the first real browser game flow exists, likely 
 
 ## 03. Authentication Shell
 
-- [ ] Add Clerk dependencies and provider wiring.
-- [ ] Add sign-in route.
-- [ ] Add sign-out access from the authenticated app shell.
-- [ ] Protect the game routes that need a signed-in user.
-- [ ] Add an auth helper that returns the current external identity.
-- [ ] Define the local user synchronization path after first login.
-- [ ] Keep provider-specific IDs out of game and rating domain records.
+- [x] Add Clerk dependencies and provider wiring.
+- [x] Add sign-in route.
+- [x] Add sign-out access from the authenticated app shell.
+- [x] Protect the game routes that need a signed-in user.
+- [x] Add an auth helper that returns the current external identity.
+- [x] Define the local user synchronization path after first login.
+- [x] Keep provider-specific IDs out of game and rating domain records.
+
+Local user synchronization path: `getCurrentUserIdentity()` returns a trimmed Clerk identity for server code. Phase 05 should upsert the local `User`, `UserAuthIdentity`, and default `Rating` from that helper before game creation. Game and rating records must reference internal `User.id` values, while Clerk user IDs stay inside `UserAuthIdentity`.
 
 ## 04. Prisma and Database Foundation
 
@@ -195,4 +197,4 @@ Playwright should be added when the first real browser game flow exists, likely 
 
 ## Next Task
 
-Start Phase 03 by wiring the authentication shell with Clerk.
+Start Phase 04 by initializing Prisma and the database foundation.

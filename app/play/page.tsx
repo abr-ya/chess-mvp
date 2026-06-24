@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthActions } from "@/components/auth/auth-actions";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function PlayPage() {
@@ -6,9 +7,12 @@ export default function PlayPage() {
     <main className="min-h-screen bg-[#f5f1e8] px-5 py-6 text-[#171717] sm:px-8 lg:px-10">
       <section className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[minmax(320px,420px)_1fr]">
         <div>
-          <Link href="/" className="text-sm font-semibold text-[#766246]">
-            Chess MVP
-          </Link>
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" className="text-sm font-semibold text-[#766246]">
+              Chess MVP
+            </Link>
+            <AuthActions />
+          </div>
           <h1 className="mt-6 text-4xl font-semibold">Play</h1>
           <p className="mt-4 text-base leading-7 text-[#5d5548]">
             This route is the primary entry point for creating a basic manual

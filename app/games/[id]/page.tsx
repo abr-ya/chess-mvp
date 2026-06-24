@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { AuthActions } from "@/components/auth/auth-actions";
 import { Badge } from "@/components/ui/badge";
 
 type GamePageProps = {
@@ -11,6 +14,12 @@ export default async function GamePage({ params }: GamePageProps) {
 
   return (
     <main className="min-h-screen bg-[#f5f1e8] px-5 py-6 text-[#171717] sm:px-8 lg:px-10">
+      <header className="mx-auto mb-6 flex w-full max-w-7xl items-center justify-between gap-4">
+        <Link href="/play" className="text-sm font-semibold text-[#766246]">
+          Chess MVP
+        </Link>
+        <AuthActions />
+      </header>
       <section className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-[minmax(320px,680px)_minmax(280px,360px)]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#766246]">

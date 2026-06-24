@@ -168,4 +168,4 @@ Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md
 
 ## Next Task
 
-Start Phase 03 by wiring the authentication shell with Clerk.
+Start Phase 04 by initializing Prisma and the database foundation.
