@@ -18,4 +18,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Phase 04 by initializing Prisma and the database foundation.
+Start Phase 05 by implementing local user and rating initialization from Clerk identity.

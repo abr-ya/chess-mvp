@@ -17,7 +17,10 @@ The MVP should deliver a reliable game loop. Every later phase should build on t
 
 Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md)
 
-- [ ] Basic registration and sign-in.
+Phase 1 progress is tracked in detail in the linked task list. The backlog below shows only the larger product outcomes, so scaffold, tooling, shadcn/ui setup, and the authentication shell may be complete there before all product outcomes in this summary are checked.
+
+- [x] Basic registration and sign-in.
+- [x] Prisma and PostgreSQL foundation.
 - [ ] User and rating models.
 - [ ] Game model in the database.
 - [ ] Browser chessboard.

@@ -83,21 +83,21 @@ Clerk webhook dependency: Phase 1 must work without Clerk webhooks. The local us
 
 ## 04. Prisma and Database Foundation
 
-- [ ] Initialize Prisma 7.8.0.
-- [ ] Add PostgreSQL connection configuration through environment variables.
-- [ ] Create the initial Prisma schema.
-- [ ] Add `User`.
-- [ ] Add `UserAuthIdentity`.
-- [ ] Add `Rating`.
-- [ ] Add `Game`.
-- [ ] Add `GameParticipant`.
-- [ ] Add `Move`.
-- [ ] Add `TimeEvent`.
-- [ ] Add enums for game mode, game status, participant side, result, and termination reason.
-- [ ] Add indexes for user game lookup and game move ordering.
-- [ ] Generate Prisma Client.
-- [ ] Create the first migration.
-- [ ] Add a shared Prisma client helper.
+- [x] Initialize Prisma 7.8.0.
+- [x] Add PostgreSQL connection configuration through environment variables.
+- [x] Create the initial Prisma schema.
+- [x] Add `User`.
+- [x] Add `UserAuthIdentity`.
+- [x] Add `Rating`.
+- [x] Add `Game`.
+- [x] Add `GameParticipant`.
+- [x] Add `Move`.
+- [x] Add `TimeEvent`.
+- [x] Add enums for game mode, game status, participant side, result, and termination reason.
+- [x] Add indexes for user game lookup and game move ordering.
+- [x] Generate Prisma Client.
+- [x] Create the first migration.
+- [x] Add a shared Prisma client helper.
 
 ## 05. User and Rating Models
 

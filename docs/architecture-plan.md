@@ -39,6 +39,8 @@ The current shadcn/ui setup uses the `base-nova` style preset with Tailwind CSS 
 
 PostgreSQL and Prisma are a conservative fit for structured game records, moves, ratings, users, and future analysis jobs. The database remains the system of record; PGN is stored as a generated artifact, not as the only game state.
 
+Prisma 7 uses `prisma.config.ts` for the PostgreSQL datasource URL and generates the TypeScript client into `lib/generated/prisma`. Runtime database access should go through the shared helper in `lib/persistence/prisma.ts`, which constructs Prisma Client with `@prisma/adapter-pg`.
+
 Socket.IO is preferred over raw WebSocket for the first MVP because it gives a stable event model, reconnect behavior, and room-style game subscriptions with less custom infrastructure. It should still be isolated behind a transport layer so it can be replaced later if needed.
 
 `chess.js` is the server-side chess rules dependency. The client can use it for optimistic hints, but every accepted move must be validated by the server.

@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AuthProvider {
+  CLERK
+}
+
+enum GameMode {
+  MANUAL
+  COMPUTER
+  ONLINE
+}
+
+enum GameStatus {
+  WAITING
+  ACTIVE
+  COMPLETED
+  ABORTED
+}
+
+enum ParticipantSide {
+  WHITE
+  BLACK
+}
+
+enum GameResult {
+  WHITE_WIN
+  BLACK_WIN
+  DRAW
+  ABORTED
+}
+
+enum TerminationReason {
+  CHECKMATE
+  STALEMATE
+  INSUFFICIENT_MATERIAL
+  RESIGNATION
+  TIMEOUT
+  ABORTED
+}
+
+enum TimeEventType {
+  START
+  MOVE
+  PAUSE
+  RESUME
+  FLAG
+  ADJUST
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String?
+  displayName String?
+  avatarUrl   String?
+  lastSeenAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authIdentities UserAuthIdentity[]
+  ratings        Rating[]
+  participants   GameParticipant[]
+}
+
+model UserAuthIdentity {
+  id             String       @id @default(cuid())
+  userId         String
+  provider       AuthProvider
+  providerUserId String
+  email          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+}
+
+model Rating {
+  id          String   @id @default(cuid())
+  userId      String
+  mode        GameMode @default(MANUAL)
+  value       Int      @default(1200)
+  gamesPlayed Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, mode])
+}
+
+model Game {
+  id                String             @id @default(cuid())
+  mode              GameMode           @default(MANUAL)
+  status            GameStatus         @default(ACTIVE)
+  currentFen        String
+  result            GameResult?
+  terminationReason TerminationReason?
+  pgn               String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  completedAt       DateTime?
+
+  participants GameParticipant[]
+  moves        Move[]
+  timeEvents   TimeEvent[]
+
+  @@index([status, updatedAt])
+}
+
+model GameParticipant {
+  id           String          @id @default(cuid())
+  gameId       String
+  userId       String?
+  side         ParticipantSide
+  isComputer   Boolean         @default(false)
+  displayName  String?
+  ratingBefore Int?
+  ratingAfter  Int?
+  result       GameResult?
+  createdAt    DateTime        @default(now())
+
+  game       Game        @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  moves      Move[]
+  timeEvents TimeEvent[]
+
+  @@unique([gameId, side])
+  @@index([gameId])
+  @@index([userId, createdAt])
+}
+
+model Move {
+  id             String          @id @default(cuid())
+  gameId         String
+  participantId  String?
+  idempotencyKey String?
+  moveNumber     Int
+  side           ParticipantSide
+  from           String
+  to             String
+  promotion      String?
+  uci            String
+  san            String
+  fenAfter       String
+  clockMsAfter   Int?
+  createdAt      DateTime        @default(now())
+
+  game        Game             @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  participant GameParticipant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@unique([gameId, idempotencyKey])
+  @@index([gameId, moveNumber])
+}
+
+model TimeEvent {
+  id            String          @id @default(cuid())
+  gameId        String
+  participantId String?
+  side          ParticipantSide
+  type          TimeEventType
+  remainingMs   Int?
+  elapsedMs     Int?
+  createdAt     DateTime        @default(now())
+
+  game        Game             @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  participant GameParticipant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@index([gameId, createdAt])
+}
