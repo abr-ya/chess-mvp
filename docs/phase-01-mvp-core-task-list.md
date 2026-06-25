@@ -101,13 +101,13 @@ Clerk webhook dependency: Phase 1 must work without Clerk webhooks. The local us
 
 ## 05. User and Rating Models
 
-- [ ] Implement local user creation or upsert from Clerk identity.
-- [ ] Ensure local user upsert does not depend on Clerk webhooks.
-- [ ] Store email, display name, avatar URL, and last seen timestamp.
-- [ ] Create default rating records for new users.
-- [ ] Use a starting rating of 1200.
-- [ ] Keep rating update logic out of Phase 1 except for model shape and testable helper boundaries.
-- [ ] Add tests for user/rating initialization helpers if they contain non-trivial logic.
+- [x] Implement local user creation or upsert from Clerk identity.
+- [x] Ensure local user upsert does not depend on Clerk webhooks.
+- [x] Store email, display name, avatar URL, and last seen timestamp.
+- [x] Create default rating records for new users.
+- [x] Use a starting rating of 1200.
+- [x] Keep rating update logic out of Phase 1 except for model shape and testable helper boundaries.
+- [x] Add tests for user/rating initialization helpers if they contain non-trivial logic.
 
 ## 06. Game Domain Types
 

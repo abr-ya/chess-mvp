@@ -18,4 +18,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Phase 05 by implementing local user and rating initialization from Clerk identity.
+Start Phase 06 by defining game domain types and Prisma-to-domain mapping boundaries.

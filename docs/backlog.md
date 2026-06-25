@@ -21,7 +21,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 
 - [x] Basic registration and sign-in.
 - [x] Prisma and PostgreSQL foundation.
-- [ ] User and rating models.
+- [x] User and rating models.
 - [ ] Game model in the database.
 - [ ] Browser chessboard.
 - [ ] Server-side legal move validation.
