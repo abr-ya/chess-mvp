@@ -1,7 +1,9 @@
-import type { GameSnapshot, MoveCommand } from "./types";
+import type { CreateGameInput, GameSnapshot, MoveCommand } from "./types";
 
 export class GameService {
-  async createGame(): Promise<GameSnapshot> {
+  async createGame(input: CreateGameInput): Promise<GameSnapshot> {
+    void input;
+
     throw new Error("GameService.createGame is not implemented yet.");
   }
 

@@ -111,11 +111,11 @@ Clerk webhook dependency: Phase 1 must work without Clerk webhooks. The local us
 
 ## 06. Game Domain Types
 
-- [ ] Define TypeScript domain types for game snapshots, participants, moves, status, result, and legal actions.
-- [ ] Define a normalized move command shape with `from`, `to`, optional `promotion`, and idempotency key.
-- [ ] Define a game creation input for a basic manual chess game.
-- [ ] Define mapper functions between Prisma records and domain snapshots.
-- [ ] Keep controller/page code from depending directly on raw Prisma shapes where game behavior is involved.
+- [x] Define TypeScript domain types for game snapshots, participants, moves, status, result, and legal actions.
+- [x] Define a normalized move command shape with `from`, `to`, optional `promotion`, and idempotency key.
+- [x] Define a game creation input for a basic manual chess game.
+- [x] Define mapper functions between Prisma records and domain snapshots.
+- [x] Keep controller/page code from depending directly on raw Prisma shapes where game behavior is involved.
 
 ## 07. GameService Core
 
@@ -203,4 +203,4 @@ Clerk webhook dependency: Phase 1 must work without Clerk webhooks. The local us
 
 ## Next Task
 
-Start Phase 04 by initializing Prisma and the database foundation.
+Start Phase 07 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.

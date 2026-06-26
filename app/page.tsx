@@ -6,7 +6,7 @@ const featureRows = [
   ["Mode", "Manual chess game foundation"],
   ["Rules", "Server-authoritative validation planned through chess.js"],
   ["Storage", "Users, games, participants, moves, and positions"],
-  ["Next slice", "Authentication shell, Prisma schema, and GameService"],
+  ["Next slice", "chess.js-backed GameService operations"],
 ];
 
 export default function Home() {

@@ -6,9 +6,13 @@ describe("GameService scaffold", () => {
   it("keeps createGame explicitly unimplemented until persistence lands", async () => {
     const service = new GameService();
 
-    await expect(service.createGame()).rejects.toThrow(
-      "GameService.createGame is not implemented yet.",
-    );
+    await expect(
+      service.createGame({
+        ownerUserId: "user-1",
+        mode: "manual",
+        whiteUserId: "user-1",
+      }),
+    ).rejects.toThrow("GameService.createGame is not implemented yet.");
   });
 
   it("keeps submitMove explicitly unimplemented until chess validation lands", async () => {
@@ -17,7 +21,7 @@ describe("GameService scaffold", () => {
     await expect(
       service.submitMove({
         gameId: "game-1",
-        moveId: "move-1",
+        idempotencyKey: "move-1",
         from: "e2",
         to: "e4",
       }),

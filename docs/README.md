@@ -18,4 +18,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Phase 06 by defining game domain types and Prisma-to-domain mapping boundaries.
+Start Phase 07 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.

@@ -22,7 +22,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [x] Basic registration and sign-in.
 - [x] Prisma and PostgreSQL foundation.
 - [x] User and rating models.
-- [ ] Game model in the database.
+- [x] Game model in the database.
 - [ ] Browser chessboard.
 - [ ] Server-side legal move validation.
 - [ ] Move list in SAN.
@@ -177,4 +177,4 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 
 ## Next Task
 
-Start Phase 04 by initializing Prisma and the database foundation.
+Start Phase 07 from the detailed Phase 01 tracker by adding `chess.js` and implementing the first server-side game operations.
