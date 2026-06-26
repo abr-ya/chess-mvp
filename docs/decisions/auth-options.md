@@ -112,7 +112,7 @@ Pros:
 
 - managed authentication with social sign-in support;
 - good fit for API-first products;
-- useful adjacent product features for later phases;
+- useful adjacent product features for later roadmap features;
 - less custom security work than building from scratch.
 
 Cons:
@@ -234,8 +234,6 @@ Webhook failures should be handled as sync issues, not as authentication or game
 
 ## Open Questions
 
-- Which frontend/backend stack will be used for the MVP?
 - Is email/password required, or is email code/magic-link acceptable?
 - Should the MVP allow only registered users, or also guest games?
 - Should Facebook sign-in be included before launch or kept as a later enhancement?
-- Do we need bilingual authentication screens from day one?

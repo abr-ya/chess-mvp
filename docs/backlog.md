@@ -1,10 +1,12 @@
 # Chess Platform Development Backlog
 
-## Phase Principle
+## Roadmap Principle
 
-The MVP should deliver a reliable game loop. Every later phase should build on top of stored games, ratings, and a stable server-side game model.
+The MVP should deliver a reliable game loop. Every later feature should build on top of stored games, ratings, and a stable server-side game model.
 
-## Phase 0. Project Setup
+Planning terminology: [Planning Structure](./planning-structure.md)
+
+## Feature 00. Project Setup
 
 - [x] Choose the frontend, backend, database, and real-time transport stack.
 - [x] Create the service architecture diagram.
@@ -13,11 +15,11 @@ The MVP should deliver a reliable game loop. Every later phase should build on t
 - [x] Define API contracts for game creation, moves, game state, history, and PGN.
 - [x] Create the basic screen design.
 
-## Phase 1. MVP Core
+## Feature 01. MVP Core
 
-Detailed tracker: [Phase 01 MVP Core Task List](./phase-01-mvp-core-task-list.md)
+Detailed feature plan: [Feature 01. MVP Core](./features/01-mvp-core.md)
 
-Phase 1 progress is tracked in detail in the linked task list. The backlog below shows only the larger product outcomes, so scaffold, tooling, shadcn/ui setup, and the authentication shell may be complete there before all product outcomes in this summary are checked.
+Feature 01 progress is tracked in detail in the linked feature plan. The backlog below shows only the larger product outcomes, so scaffold, tooling, shadcn/ui setup, and the authentication shell may be complete there before all product outcomes in this summary are checked.
 
 - [x] Basic registration and sign-in.
 - [x] Prisma and PostgreSQL foundation.
@@ -29,7 +31,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Game completion by checkmate, stalemate, and impossible continuation.
 - [ ] Position and move persistence.
 
-## Phase 2. Play Against Computer and Early Analysis
+## Feature 02. Play Against Computer and Early Analysis
 
 - [ ] Chess engine integration.
 - [ ] Difficulty-level adapter.
@@ -44,7 +46,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Bounded Stockfish evaluation for a single position.
 - [ ] Show score and at least one suggested best line.
 
-## Phase 3. Time Controls
+## Feature 03. Time Controls
 
 - [ ] Server-side game clocks.
 - [ ] Preset controls: 1+0, 3+0, 3+2, 5+0, 10+0, 15+10.
@@ -56,7 +58,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Game completion by timeout.
 - [ ] Reconnect with current clock recovery.
 
-## Phase 4. Online Human Play
+## Feature 04. Online Human Play
 
 - [ ] Create a game by invite link.
 - [ ] Second player joins the game.
@@ -67,7 +69,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Draw offer.
 - [ ] Game completion and rating update for both players.
 
-## Phase 5. PGN and History
+## Feature 05. PGN and History
 
 - [ ] PGN generation with required tags.
 - [ ] Store PGN on the game record.
@@ -78,7 +80,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Copy PGN.
 - [ ] Download PGN.
 
-## Phase 6. Matchmaking Improvements
+## Feature 06. Matchmaking Improvements
 
 - [ ] Quick play with waiting queue.
 - [ ] Pairing by nearby rating.
@@ -87,7 +89,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Protection against joining multiple matches at once.
 - [ ] Unrated casual games.
 
-## Phase 7. Game Analysis
+## Feature 07. Game Analysis
 
 - [ ] Build on the early analysis slice instead of adding a second engine integration.
 - [ ] Run engine analysis after game completion.
@@ -98,7 +100,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Store analysis job separately from the game.
 - [ ] Limit analysis through quotas or a job queue.
 
-## Phase 8. Puzzles and Training
+## Feature 08. Puzzles and Training
 
 - [ ] Import positions from FEN/PGN.
 - [ ] Puzzle database.
@@ -108,7 +110,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Puzzle rating.
 - [ ] User statistics by theme.
 
-## Phase 9. Tournaments
+## Feature 09. Tournaments
 
 - [ ] Tournament creation.
 - [ ] Tournament types: arena, Swiss, round-robin.
@@ -119,7 +121,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Tie-break rules.
 - [ ] Tournament page.
 
-## Phase 10. Social and Community Features
+## Feature 10. Social and Community Features
 
 - [ ] User profile.
 - [ ] Public game history.
@@ -129,7 +131,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Game comments.
 - [ ] Reports and moderation.
 
-## Phase 11. Anti-Cheat and Fair Play
+## Feature 11. Anti-Cheat and Fair Play
 
 - [ ] Detect suspicious engine correlation.
 - [ ] Analyze move timing.
@@ -138,7 +140,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Restrictions for new accounts.
 - [ ] Ban policy.
 
-## Phase 12. Mobile Applications
+## Feature 12. Mobile Applications
 
 - [ ] Stabilize the public client API.
 - [ ] Push notifications for opponent moves.
@@ -148,7 +150,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Android application.
 - [ ] Deep links for games and invitations.
 
-## Phase 13. Desktop Client
+## Feature 13. Desktop Client
 
 - [ ] Define the goal of the desktop client: offline analysis, play, training, or all of them.
 - [ ] Choose the technology: Python/PySide, Electron, Tauri, or native.
@@ -157,7 +159,7 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 - [ ] Support a local engine for analysis.
 - [ ] Add PGN import and export.
 
-## Phase 14. Monetization
+## Feature 14. Monetization
 
 - [ ] Premium game analysis.
 - [ ] Advanced statistics.
@@ -177,4 +179,4 @@ Phase 1 progress is tracked in detail in the linked task list. The backlog below
 
 ## Next Task
 
-Start Phase 07 from the detailed Phase 01 tracker by adding `chess.js` and implementing the first server-side game operations.
+Start Stage 07 from the Feature 01 plan by adding `chess.js` and implementing the first server-side game operations.

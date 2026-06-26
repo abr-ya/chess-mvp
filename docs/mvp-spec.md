@@ -520,12 +520,12 @@ The MVP is complete when:
 - rating changes after a rated game;
 - a completed game can be opened and reviewed move by move.
 
-## 11. Open Questions
+## 11. Decision References and Open Questions
 
-- Authentication provider decision is described separately in [Authentication System Options](./auth-options.md).
+- Authentication provider decision is described separately in [Authentication System Options](./decisions/auth-options.md).
 - Technology stack and first implementation architecture are described separately in [Architecture Plan](./architecture-plan.md).
+- Current executable implementation order is tracked in [Feature 01. MVP Core](./features/01-mvp-core.md).
 - Should guest mode be part of the first MVP, or should all games require registered users?
 - Should human games be rated by default?
 - Should draw offers be included in the MVP?
 - Should public viewing of other users' completed games be allowed?
-- Should the MVP be English-only, Russian-only, or bilingual from the start?

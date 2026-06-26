@@ -39,7 +39,7 @@ export default function Home() {
         <div className="grid flex-1 items-center gap-10 py-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,1.05fr)]">
           <div className="max-w-2xl">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#766246]">
-              Phase 01 scaffold
+              Feature 01 scaffold
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-[#171717] sm:text-5xl">
               Build the reliable chess game core first.

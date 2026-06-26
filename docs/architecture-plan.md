@@ -259,14 +259,18 @@ shadcn/ui usage should stay practical and restrained:
 - avoid wrapping the whole game screen in decorative cards;
 - keep repeated history rows and settings panels dense enough for regular use.
 
-## Open Decisions
+## Architecture Handoff
 
-- Confirm Clerk vs Auth.js before implementing authentication.
-- Confirm whether the UI should be English-only or bilingual from the start.
-- Choose the exact React chessboard package during scaffolding after checking current maintenance status.
-- Choose the exact Stockfish package or binary strategy during engine implementation.
-- Decide whether the local development database should be Docker PostgreSQL or an existing local PostgreSQL instance.
+Resolved decisions:
 
-## Next Task
+- Clerk is the MVP authentication provider.
+- The UI language is English unless a later product decision changes it.
+- Prisma and PostgreSQL are initialized with Prisma Client generated into `lib/generated/prisma`.
+- Local database setup is environment-variable driven through `DATABASE_URL`; a Docker-specific workflow is not required yet.
 
-Start Phase 04 by initializing Prisma and the database foundation.
+Still deferred:
+
+- Choose the exact React chessboard package during `Stage 09. Browser Chessboard` after checking current maintenance status and React 19 / Next.js 16 compatibility.
+- Choose the exact Stockfish package, binary, or WASM strategy during Feature 02 engine implementation.
+
+Current implementation handoff lives in [Feature 01. MVP Core](./features/01-mvp-core.md).

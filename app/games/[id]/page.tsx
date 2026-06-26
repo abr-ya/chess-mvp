@@ -35,7 +35,7 @@ export default async function GamePage({ params }: GamePageProps) {
         <aside className="border-l border-[#d9d0c0] pl-6">
           <div className="flex items-center justify-between gap-3">
             <h1 className="text-2xl font-semibold">Game shell</h1>
-            <Badge variant="secondary">Phase 01</Badge>
+            <Badge variant="secondary">Feature 01</Badge>
           </div>
           <dl className="mt-6 grid gap-4 text-sm">
             <div>

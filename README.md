@@ -32,12 +32,14 @@ npm run test
 ## Project Docs
 
 - [Docs index](./docs/README.md)
-- [Phase 01 MVP Core Task List](./docs/phase-01-mvp-core-task-list.md)
+- [Development Backlog](./docs/backlog.md)
+- [MVP Core Feature Plan](./docs/features/01-mvp-core.md)
+- [Planning Structure](./docs/planning-structure.md)
 - [Architecture Plan](./docs/architecture-plan.md)
 
 ## Current Implementation Slice
 
-Phase 01 starts with the scaffold, domain package layout, authentication shell,
+Feature 01 starts with the scaffold, domain package layout, authentication shell,
 Prisma schema, server-side game validation, and a browser chessboard surface.
 
 The current scaffold includes the initial product routes:
