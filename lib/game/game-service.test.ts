@@ -55,6 +55,22 @@ describe("GameService", () => {
     expect(repository.appendedMoves).toHaveLength(1);
   });
 
+  it("returns the stored result when an idempotency key is repeated", async () => {
+    const { repository, service, gameId } = await createGame();
+    const command = {
+      gameId,
+      idempotencyKey: "move-1",
+      from: "e2",
+      to: "e4",
+    };
+
+    const firstResult = await service.submitMove(command);
+    const repeatedResult = await service.submitMove(command);
+
+    expect(repeatedResult).toEqual(firstResult);
+    expect(repository.appendedMoves).toHaveLength(1);
+  });
+
   it("rejects illegal moves without changing the stored game", async () => {
     const { repository, service, gameId } = await createGame();
 
@@ -201,6 +217,18 @@ class MemoryGameRepository implements GameRepository {
 
   async getGame(gameId: string): Promise<GameSnapshot | null> {
     return this.game?.id === gameId ? structuredClone(this.game) : null;
+  }
+
+  async getGameByMoveKey(
+    gameId: string,
+    idempotencyKey: string,
+  ): Promise<GameSnapshot | null> {
+    const exists = this.appendedMoves.some(
+      (move) =>
+        move.gameId === gameId && move.idempotencyKey === idempotencyKey,
+    );
+
+    return exists ? this.getGame(gameId) : null;
   }
 
   async appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot> {

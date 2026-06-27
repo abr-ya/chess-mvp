@@ -57,14 +57,14 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Stage 02. API or Server Action Surface
 
-- [ ] Choose the Feature 02 server boundary: route handlers, server actions, or a small internal API facade.
-- [ ] Implement create basic game operation.
-- [ ] Implement get game snapshot operation.
-- [ ] Implement submit move operation.
-- [ ] Require an authenticated user for game creation and access.
-- [ ] Check that the current user is a participant before returning a game snapshot.
-- [ ] Normalize errors into UI-friendly messages.
-- [ ] Avoid exposing provider auth IDs in API responses.
+- [x] Choose the Feature 02 server boundary: route handlers, server actions, or a small internal API facade.
+- [x] Implement create basic game operation.
+- [x] Implement get game snapshot operation.
+- [x] Implement submit move operation.
+- [x] Require an authenticated user for game creation and access.
+- [x] Check that the current user is a participant before returning a game snapshot.
+- [x] Normalize errors into UI-friendly messages.
+- [x] Avoid exposing provider auth IDs in API responses.
 
 ## Stage 03. Browser Chessboard
 
@@ -124,4 +124,4 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Next Task
 
-Start Stage 02 by choosing the server boundary and exposing authenticated create-game, get-game, and submit-move operations.
+Start Stage 03 by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.

@@ -61,6 +61,23 @@ export class PrismaGameRepository implements GameRepository {
     return record ? mapGameSnapshotRecord(record) : null;
   }
 
+  async getGameByMoveKey(
+    gameId: string,
+    idempotencyKey: string,
+  ): Promise<GameSnapshot | null> {
+    const move = await prisma.move.findUnique({
+      where: {
+        gameId_idempotencyKey: {
+          gameId,
+          idempotencyKey,
+        },
+      },
+      select: { gameId: true },
+    });
+
+    return move ? this.getGame(move.gameId) : null;
+  }
+
   async appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot> {
     return prisma.$transaction(async (tx) => {
       const gameUpdate = await tx.game.updateMany({

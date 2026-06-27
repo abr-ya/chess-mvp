@@ -29,4 +29,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 02 of Feature 02 by choosing the server boundary and exposing authenticated create-game, get-game, and submit-move operations.
+Start Stage 03 of Feature 02 by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.

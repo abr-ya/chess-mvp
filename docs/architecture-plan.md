@@ -185,14 +185,20 @@ Important modeling rules:
 ### HTTP
 
 ```text
+POST /api/games
+  Creates a basic manual game for the authenticated user.
+
+GET /api/games/:id
+  Returns the latest game snapshot for an authorized participant.
+
+POST /api/games/:id/moves
+  Validates and persists a move for an authorized participant.
+
 POST /api/games/computer
   Creates a computer game.
 
 POST /api/games/invite
   Creates a waiting human game and returns an invite link.
-
-GET /api/games/:id
-  Returns the latest game snapshot for an authorized participant.
 
 GET /api/games
   Returns the current user's paginated game history.
@@ -200,6 +206,8 @@ GET /api/games
 GET /api/games/:id/pgn
   Returns PGN for a completed game.
 ```
+
+Feature 02 uses App Router Route Handlers for this HTTP boundary. Route files stay thin and delegate authentication, authorization, validation, and game behavior to the testable `GameApi` and `GameService` layers.
 
 ### Socket.IO Events
 

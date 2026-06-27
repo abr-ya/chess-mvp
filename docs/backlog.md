@@ -187,4 +187,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 02 from the Feature 02 plan by choosing the server boundary and exposing authenticated game operations.
+Start Stage 03 from the Feature 02 plan by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.

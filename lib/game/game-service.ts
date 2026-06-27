@@ -36,6 +36,10 @@ export type AppendStoredMoveInput = {
 export interface GameRepository {
   createGame(input: CreateStoredGameInput): Promise<GameSnapshot>;
   getGame(gameId: string): Promise<GameSnapshot | null>;
+  getGameByMoveKey(
+    gameId: string,
+    idempotencyKey: string,
+  ): Promise<GameSnapshot | null>;
   appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot>;
 }
 
@@ -87,6 +91,15 @@ export class GameService {
   }
 
   async submitMove(command: MoveCommand): Promise<GameSnapshot> {
+    const existingResult = await this.repository.getGameByMoveKey(
+      command.gameId,
+      command.idempotencyKey,
+    );
+
+    if (existingResult) {
+      return existingResult;
+    }
+
     const snapshot = await this.getGameSnapshot(command.gameId);
 
     if (snapshot.status === "completed" || snapshot.status === "aborted") {
