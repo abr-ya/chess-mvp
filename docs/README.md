@@ -31,4 +31,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 04 of Feature 02 by wiring game creation and persisted snapshots into `/play` and `/games/[id]` around the completed `ChessboardView`.
+Start Stage 05 of Feature 02 by adding Playwright and verifying the complete persisted browser game flow against PostgreSQL.

@@ -79,17 +79,17 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Stage 04. Game Screen
 
-- [ ] Build `/play` as the primary product entry.
-- [ ] Add a "new game" action.
-- [ ] Add `/games/[id]` for the active game screen.
-- [ ] Show the board.
-- [ ] Show white and black player labels.
-- [ ] Show side to move.
-- [ ] Show game status.
-- [ ] Show a compact SAN move list.
-- [ ] Show checkmate, stalemate, or draw state when the game ends.
-- [ ] Add a new game action after completion.
-- [ ] Keep the layout usable on desktop and mobile.
+- [x] Build `/play` as the primary product entry.
+- [x] Add a "new game" action.
+- [x] Add `/games/[id]` for the active game screen.
+- [x] Show the board.
+- [x] Show white and black player labels.
+- [x] Show side to move.
+- [x] Show game status.
+- [x] Show a compact SAN move list.
+- [x] Show checkmate, stalemate, or draw state when the game ends.
+- [x] Add a new game action after completion.
+- [x] Keep the layout usable on desktop and mobile.
 
 ## Stage 05. Browser-Flow and Persistence Verification
 
@@ -111,11 +111,11 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Feature Completion Criteria
 
-- [ ] A signed-in user can create a basic game.
-- [ ] The game screen renders a stable chessboard from persisted FEN.
+- [x] A signed-in user can create a basic game.
+- [x] The game screen renders a stable chessboard from persisted FEN.
 - [x] Legal moves are accepted by the server-side game service.
 - [x] Illegal moves are rejected by the server-side game service.
-- [ ] SAN move list is persisted and displayed.
+- [x] SAN move list is persisted and displayed.
 - [x] Checkmate and stalemate end the game.
 - [x] Completed games reject further moves.
 - [x] Core behavior has Vitest coverage.
@@ -124,4 +124,4 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Next Task
 
-Start Stage 04 by wiring game creation and persisted snapshots into `/play` and `/games/[id]` around the completed `ChessboardView`.
+Start Stage 05 by adding Playwright and verifying the complete persisted browser game flow against PostgreSQL.

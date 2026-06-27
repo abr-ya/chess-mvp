@@ -43,8 +43,8 @@ npm run test
 Feature 01 provides the scaffold, domain package layout, authentication shell,
 Prisma schema, local user initialization, and game domain contracts. Feature 02
 is the active implementation slice; server-side game validation, authenticated
-HTTP operations, and the interactive chessboard are complete. The persisted
-game screen is next.
+HTTP operations, the interactive chessboard, and the persisted game screen are
+complete. Browser-flow verification is next.
 
 The current scaffold includes the initial product routes:
 

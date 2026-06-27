@@ -35,7 +35,7 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 - [x] Browser chessboard.
 - [x] Server-side legal move validation.
-- [ ] Move list in SAN.
+- [x] Move list in SAN.
 - [x] Game completion by checkmate, stalemate, and impossible continuation.
 - [x] Position and move persistence.
 
@@ -187,4 +187,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 04 from the Feature 02 plan by wiring game creation and persisted snapshots into `/play` and `/games/[id]`.
+Start Stage 05 from the Feature 02 plan by adding Playwright and verifying the complete persisted browser game flow.

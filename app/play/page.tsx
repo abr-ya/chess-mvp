@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AuthActions } from "@/components/auth/auth-actions";
-import { buttonVariants } from "@/components/ui/button";
+import { NewGameButton } from "@/components/game/new-game-button";
 
 export default function PlayPage() {
   return (
@@ -18,12 +18,7 @@ export default function PlayPage() {
             This route is the primary entry point for creating a basic manual
             game during Feature 02.
           </p>
-          <Link
-            href="/games/example"
-            className={buttonVariants({ className: "mt-8", size: "lg" })}
-          >
-            Open game shell
-          </Link>
+          <NewGameButton className="mt-8" />
         </div>
 
         <div className="grid min-h-[420px] place-items-center border border-[#d9d0c0] bg-[#ede4d4] p-5">
