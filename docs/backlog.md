@@ -33,7 +33,7 @@ Detailed feature plan: [Feature 02. Basic Persisted Game Loop](./features/02-bas
 
 Feature 02 owns the first playable server-backed manual game flow.
 
-- [ ] Browser chessboard.
+- [x] Browser chessboard.
 - [x] Server-side legal move validation.
 - [ ] Move list in SAN.
 - [x] Game completion by checkmate, stalemate, and impossible continuation.
@@ -187,4 +187,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 03 from the Feature 02 plan by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.
+Start Stage 04 from the Feature 02 plan by wiring game creation and persisted snapshots into `/play` and `/games/[id]`.

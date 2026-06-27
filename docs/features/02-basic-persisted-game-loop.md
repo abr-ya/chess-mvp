@@ -68,14 +68,14 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Stage 03. Browser Chessboard
 
-- [ ] Choose the exact React chessboard package.
-- [ ] Wrap the selected package in the local `ChessboardView` component.
-- [ ] Render the current FEN.
-- [ ] Support moving pieces by drag/drop or click/tap.
-- [ ] Send move commands through the server-backed operation.
-- [ ] Disable move input while a move is being submitted.
-- [ ] Show illegal move feedback without corrupting local board state.
-- [ ] Keep board dimensions stable on desktop and mobile.
+- [x] Choose the exact React chessboard package.
+- [x] Wrap the selected package in the local `ChessboardView` component.
+- [x] Render the current FEN.
+- [x] Support moving pieces by drag/drop or click/tap.
+- [x] Send move commands through the server-backed operation.
+- [x] Disable move input while a move is being submitted.
+- [x] Show illegal move feedback without corrupting local board state.
+- [x] Keep board dimensions stable on desktop and mobile.
 
 ## Stage 04. Game Screen
 
@@ -124,4 +124,4 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Next Task
 
-Start Stage 03 by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.
+Start Stage 04 by wiring game creation and persisted snapshots into `/play` and `/games/[id]` around the completed `ChessboardView`.

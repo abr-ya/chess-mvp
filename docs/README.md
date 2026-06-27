@@ -8,6 +8,8 @@ Initial product documentation for the chess platform MVP.
   Product scope reference for the broader MVP vision and acceptance criteria.
 - [Authentication System Options](./decisions/auth-options.md)
   Authentication decision record and provider comparison.
+- [Chessboard Package Decision](./decisions/chessboard-package.md)
+  React chessboard package comparison and selected integration boundary.
 - [Architecture Plan](./architecture-plan.md)
   Architecture decision reference for stack, boundaries, service ownership, and version policy.
 - [Planning Structure](./planning-structure.md)
@@ -29,4 +31,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 03 of Feature 02 by selecting a maintained React 19-compatible chessboard package and integrating it behind `ChessboardView`.
+Start Stage 04 of Feature 02 by wiring game creation and persisted snapshots into `/play` and `/games/[id]` around the completed `ChessboardView`.
