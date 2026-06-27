@@ -1,6 +1,6 @@
 # Feature 02. Basic Persisted Game Loop
 
-This feature turns the application and domain foundation from Feature 01 into the first reliable authenticated chess game loop. It should be completed before moving to computer replies, early position analysis, time controls, online invite games, or PGN history polish.
+This completed feature turns the application and domain foundation from Feature 01 into the first reliable authenticated chess game loop.
 
 ## Feature Goal
 
@@ -105,11 +105,11 @@ Expanded Playwright coverage with a second Clerk user is deferred until the E2E 
 
 ## Stage 06. Documentation Updates
 
-- [ ] Update `docs/README.md` if the active next task changes.
-- [ ] Update `docs/backlog.md` when Feature 02 checklist items are completed.
-- [ ] Record any stack changes in `docs/architecture-plan.md`.
-- [ ] Add or refine setup instructions for the playable game flow.
-- [ ] Confirm environment variable notes cover Clerk and PostgreSQL.
+- [x] Update `docs/README.md` if the active next task changes.
+- [x] Update `docs/backlog.md` when Feature 02 checklist items are completed.
+- [x] Record any stack changes in `docs/architecture-plan.md`.
+- [x] Add or refine setup instructions for the playable game flow.
+- [x] Confirm environment variable notes cover Clerk and PostgreSQL.
 
 ## Feature Completion Criteria
 
@@ -122,8 +122,8 @@ Expanded Playwright coverage with a second Clerk user is deferred until the E2E 
 - [x] Completed games reject further moves.
 - [x] Core behavior has Vitest coverage.
 - [x] Lint, typecheck, tests, and the browser-flow check pass.
-- [ ] The backlog and docs point to the next stage or feature task.
+- [x] The backlog and docs point to the next stage or feature task.
 
 ## Next Task
 
-Complete Stage 06 documentation, mark Feature 02 complete, and point the roadmap to Feature 03.
+Continue with [Feature 03. Play Against Computer and Early Analysis](./03-computer-play-analysis.md), starting with the engine runtime decision.

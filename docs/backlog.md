@@ -31,7 +31,7 @@ Feature 01 is complete. It establishes the application shell and game-domain fou
 
 Detailed feature plan: [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
 
-Feature 02 owns the first playable server-backed manual game flow.
+Feature 02 is complete. It delivers the first playable, persisted, server-backed manual game flow.
 
 - [x] Browser chessboard.
 - [x] Server-side legal move validation.
@@ -40,6 +40,8 @@ Feature 02 owns the first playable server-backed manual game flow.
 - [x] Position and move persistence.
 
 ## Feature 03. Play Against Computer and Early Analysis
+
+Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
 
 - [ ] Chess engine integration.
 - [ ] Difficulty-level adapter.
@@ -187,4 +189,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Complete Stage 06 documentation, mark Feature 02 complete, and prepare the executable plan for Feature 03.
+Start Stage 01 of Feature 03 by comparing current Stockfish runtime options and recording the selected engine strategy.

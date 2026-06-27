@@ -15,7 +15,7 @@ Recommended MVP stack:
 - Chess rules: `chess.js` on the server for move validation, SAN, FEN, and game-over detection.
 - Chessboard UI: `react-chessboard` 5.10.0 wrapped behind a local `ChessboardView` component.
 - Engine integration and analysis: Stockfish behind an internal `EngineService` adapter, initially as a server-side process or WASM worker.
-- Testing: Vitest for domain services, Playwright for browser game flows.
+- Testing: Vitest 4.1.9 for domain services and Playwright 1.61.1 with `@clerk/testing` 2.0.4 for authenticated browser game flows.
 
 ## Version Policy
 
@@ -23,6 +23,9 @@ The MVP should use pinned stable versions for core framework and database toolin
 
 - Next.js: `16.2.9`;
 - Prisma CLI and `@prisma/client`: `7.8.0`;
+- Vitest: `4.1.9`;
+- Playwright: `1.61.1`;
+- Clerk testing helpers: `2.0.4`;
 - Database: PostgreSQL, with the concrete hosted/local version documented when the deployment target is chosen.
 
 The project may update to newer stable Next.js or Prisma releases as they become available, but updates should be intentional and verified. Patch and minor updates are acceptable when they do not introduce breaking changes for the features the MVP uses. Major upgrades, canary releases, release candidates, or changes with documented breaking behavior should be treated as separate upgrade tasks with migration notes and validation.
@@ -281,4 +284,4 @@ Still deferred:
 
 - Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
 
-Current implementation handoff lives in [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md).
+Current implementation handoff lives in [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md).
