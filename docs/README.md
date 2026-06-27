@@ -2,10 +2,20 @@
 
 Initial product documentation for the chess platform MVP.
 
+## Document Roles
+
 - [MVP Specification](./mvp-spec.md)
-- [Authentication System Options](./auth-options.md)
+  Product scope reference for the broader MVP vision and acceptance criteria.
+- [Authentication System Options](./decisions/auth-options.md)
+  Authentication decision record and provider comparison.
 - [Architecture Plan](./architecture-plan.md)
-- [Future Backlog](./backlog.md)
+  Architecture decision reference for stack, boundaries, service ownership, and version policy.
+- [Planning Structure](./planning-structure.md)
+  Rules for how roadmap, feature plans, stages, tasks, decisions, and architecture documents are maintained.
+- [Development Backlog](./backlog.md)
+  Top-level feature roadmap.
+- [Feature 01. MVP Core](./features/01-mvp-core.md)
+  Active executable plan for the current MVP core implementation.
 
 ## Working Assumptions
 
@@ -17,4 +27,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Scaffold the application with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and the initial domain package layout.
+Start Stage 07 of Feature 01 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.
