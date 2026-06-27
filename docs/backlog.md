@@ -187,4 +187,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 05 from the Feature 02 plan by adding Playwright and verifying the complete persisted browser game flow.
+Complete Stage 06 documentation, mark Feature 02 complete, and prepare the executable plan for Feature 03.

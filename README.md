@@ -29,6 +29,8 @@ npm run test
 
 `npm run test` runs the Vitest domain test suite.
 
+`npm run test:e2e` runs the authenticated Playwright game flow against the configured PostgreSQL database. It requires one existing Clerk development user in `E2E_CLERK_USER_EMAIL`. The test creates and removes its own game records.
+
 ## Project Docs
 
 - [Docs index](./docs/README.md)

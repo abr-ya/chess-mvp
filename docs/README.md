@@ -31,4 +31,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 05 of Feature 02 by adding Playwright and verifying the complete persisted browser game flow against PostgreSQL.
+Complete Stage 06 documentation, mark Feature 02 complete, and point the roadmap to Feature 03.

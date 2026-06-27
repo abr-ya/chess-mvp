@@ -93,13 +93,15 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Stage 05. Browser-Flow and Persistence Verification
 
-- [ ] Add Playwright for the first real browser game flow.
-- [ ] Confirm game creation writes `Game` and `GameParticipant` rows.
-- [ ] Confirm each accepted move writes a `Move` row.
-- [ ] Confirm `Game.currentFen` updates after every accepted move.
-- [ ] Confirm completed games become immutable for move submission.
-- [ ] Confirm a page refresh reloads the latest persisted position and move list.
-- [ ] Confirm unauthorized users cannot open another user's game.
+- [x] Add Playwright for the first real browser game flow.
+- [x] Confirm game creation writes `Game` and `GameParticipant` rows.
+- [x] Confirm each accepted move writes a `Move` row.
+- [x] Confirm `Game.currentFen` updates after every accepted move.
+- [x] Confirm completed games become immutable for move submission.
+- [x] Confirm a page refresh reloads the latest persisted position and move list.
+- [x] Confirm non-participant game access is rejected through `GameApi` tests.
+
+Expanded Playwright coverage with a second Clerk user is deferred until the E2E suite grows beyond the first critical persisted game flow.
 
 ## Stage 06. Documentation Updates
 
@@ -119,9 +121,9 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 - [x] Checkmate and stalemate end the game.
 - [x] Completed games reject further moves.
 - [x] Core behavior has Vitest coverage.
-- [ ] Lint, typecheck, tests, and the browser-flow check pass.
+- [x] Lint, typecheck, tests, and the browser-flow check pass.
 - [ ] The backlog and docs point to the next stage or feature task.
 
 ## Next Task
 
-Start Stage 05 by adding Playwright and verifying the complete persisted browser game flow against PostgreSQL.
+Complete Stage 06 documentation, mark Feature 02 complete, and point the roadmap to Feature 03.
