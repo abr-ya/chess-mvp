@@ -14,8 +14,10 @@ Initial product documentation for the chess platform MVP.
   Rules for how roadmap, feature plans, stages, tasks, decisions, and architecture documents are maintained.
 - [Development Backlog](./backlog.md)
   Top-level feature roadmap.
-- [Feature 01. MVP Core](./features/01-mvp-core.md)
-  Active executable plan for the current MVP core implementation.
+- [Feature 01. Application and Game Foundation](./features/01-application-game-foundation.md)
+  Completed foundation for the application shell, persistence, authentication, and game domain.
+- [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
+  Active executable plan for the first playable server-backed game flow.
 
 ## Working Assumptions
 
@@ -27,4 +29,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 07 of Feature 01 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.
+Start Stage 01 of Feature 02 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.

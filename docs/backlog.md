@@ -15,23 +15,31 @@ Planning terminology: [Planning Structure](./planning-structure.md)
 - [x] Define API contracts for game creation, moves, game state, history, and PGN.
 - [x] Create the basic screen design.
 
-## Feature 01. MVP Core
+## Feature 01. Application and Game Foundation
 
-Detailed feature plan: [Feature 01. MVP Core](./features/01-mvp-core.md)
+Detailed feature plan: [Feature 01. Application and Game Foundation](./features/01-application-game-foundation.md)
 
-Feature 01 progress is tracked in detail in the linked feature plan. The backlog below shows only the larger product outcomes, so scaffold, tooling, shadcn/ui setup, and the authentication shell may be complete there before all product outcomes in this summary are checked.
+Feature 01 is complete. It establishes the application shell and game-domain foundation without implementing the playable game loop.
 
 - [x] Basic registration and sign-in.
 - [x] Prisma and PostgreSQL foundation.
 - [x] User and rating models.
 - [x] Game model in the database.
+- [x] Game domain types and Prisma mappers.
+
+## Feature 02. Basic Persisted Game Loop
+
+Detailed feature plan: [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
+
+Feature 02 owns the first playable server-backed manual game flow.
+
 - [ ] Browser chessboard.
 - [ ] Server-side legal move validation.
 - [ ] Move list in SAN.
 - [ ] Game completion by checkmate, stalemate, and impossible continuation.
 - [ ] Position and move persistence.
 
-## Feature 02. Play Against Computer and Early Analysis
+## Feature 03. Play Against Computer and Early Analysis
 
 - [ ] Chess engine integration.
 - [ ] Difficulty-level adapter.
@@ -46,7 +54,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Bounded Stockfish evaluation for a single position.
 - [ ] Show score and at least one suggested best line.
 
-## Feature 03. Time Controls
+## Feature 04. Time Controls
 
 - [ ] Server-side game clocks.
 - [ ] Preset controls: 1+0, 3+0, 3+2, 5+0, 10+0, 15+10.
@@ -58,7 +66,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Game completion by timeout.
 - [ ] Reconnect with current clock recovery.
 
-## Feature 04. Online Human Play
+## Feature 05. Online Human Play
 
 - [ ] Create a game by invite link.
 - [ ] Second player joins the game.
@@ -69,7 +77,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Draw offer.
 - [ ] Game completion and rating update for both players.
 
-## Feature 05. PGN and History
+## Feature 06. PGN and History
 
 - [ ] PGN generation with required tags.
 - [ ] Store PGN on the game record.
@@ -80,7 +88,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Copy PGN.
 - [ ] Download PGN.
 
-## Feature 06. Matchmaking Improvements
+## Feature 07. Matchmaking Improvements
 
 - [ ] Quick play with waiting queue.
 - [ ] Pairing by nearby rating.
@@ -89,7 +97,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Protection against joining multiple matches at once.
 - [ ] Unrated casual games.
 
-## Feature 07. Game Analysis
+## Feature 08. Game Analysis
 
 - [ ] Build on the early analysis slice instead of adding a second engine integration.
 - [ ] Run engine analysis after game completion.
@@ -100,7 +108,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Store analysis job separately from the game.
 - [ ] Limit analysis through quotas or a job queue.
 
-## Feature 08. Puzzles and Training
+## Feature 09. Puzzles and Training
 
 - [ ] Import positions from FEN/PGN.
 - [ ] Puzzle database.
@@ -110,7 +118,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Puzzle rating.
 - [ ] User statistics by theme.
 
-## Feature 09. Tournaments
+## Feature 10. Tournaments
 
 - [ ] Tournament creation.
 - [ ] Tournament types: arena, Swiss, round-robin.
@@ -121,7 +129,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Tie-break rules.
 - [ ] Tournament page.
 
-## Feature 10. Social and Community Features
+## Feature 11. Social and Community Features
 
 - [ ] User profile.
 - [ ] Public game history.
@@ -131,7 +139,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Game comments.
 - [ ] Reports and moderation.
 
-## Feature 11. Anti-Cheat and Fair Play
+## Feature 12. Anti-Cheat and Fair Play
 
 - [ ] Detect suspicious engine correlation.
 - [ ] Analyze move timing.
@@ -140,7 +148,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Restrictions for new accounts.
 - [ ] Ban policy.
 
-## Feature 12. Mobile Applications
+## Feature 13. Mobile Applications
 
 - [ ] Stabilize the public client API.
 - [ ] Push notifications for opponent moves.
@@ -150,7 +158,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Android application.
 - [ ] Deep links for games and invitations.
 
-## Feature 13. Desktop Client
+## Feature 14. Desktop Client
 
 - [ ] Define the goal of the desktop client: offline analysis, play, training, or all of them.
 - [ ] Choose the technology: Python/PySide, Electron, Tauri, or native.
@@ -159,7 +167,7 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 - [ ] Support a local engine for analysis.
 - [ ] Add PGN import and export.
 
-## Feature 14. Monetization
+## Feature 15. Monetization
 
 - [ ] Premium game analysis.
 - [ ] Advanced statistics.
@@ -179,4 +187,4 @@ Feature 01 progress is tracked in detail in the linked feature plan. The backlog
 
 ## Next Task
 
-Start Stage 07 from the Feature 01 plan by adding `chess.js` and implementing the first server-side game operations.
+Start Stage 01 from the Feature 02 plan by adding `chess.js` and implementing the first server-side game operations.
