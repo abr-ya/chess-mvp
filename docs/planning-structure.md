@@ -18,6 +18,7 @@ Examples:
 
 - `Feature 01. Application and Game Foundation`
 - `Feature 02. Basic Persisted Game Loop`
+- `Feature 02-a. Game Loop Performance Hardening`
 - `Feature 03. Play Against Computer and Early Analysis`
 
 Use `Stage` for the ordered implementation slices inside one feature plan.
@@ -32,19 +33,23 @@ Use `Task` for checklist items inside a stage.
 
 ## File Naming
 
-Feature files should live under `docs/features/` and use this pattern:
+Feature files should live under `docs/features/` and use one of these patterns:
 
 ```text
 NN-feature-name.md
+NN-a-follow-up-name.md
 ```
 
 Examples:
 
 - `01-application-game-foundation.md`
 - `02-basic-persisted-game-loop.md`
+- `02-a-game-loop-performance.md`
 - `03-computer-play-analysis.md`
 
 Create a feature file when a roadmap item needs a detailed checklist or a resumable implementation handoff. Do not create empty feature files only to mirror the whole roadmap.
+
+Use a letter-suffixed feature only for an inserted prerequisite or hardening follow-up that must run between already numbered roadmap features. This avoids renumbering the rest of an established roadmap; normal new product work should continue using the next integer feature number.
 
 Decision files should live under `docs/decisions/` and use this pattern:
 

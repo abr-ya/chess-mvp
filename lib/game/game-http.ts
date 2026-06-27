@@ -8,6 +8,26 @@ export function gameApiResponse(result: GameApiResult): Response {
   return Response.json({ error: result.error }, { status: result.status });
 }
 
+export async function gameRouteResponse(
+  operation: () => Promise<GameApiResult>,
+): Promise<Response> {
+  try {
+    return gameApiResponse(await operation());
+  } catch (error) {
+    console.error("Unhandled game route error:", error);
+
+    return Response.json(
+      {
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "The game operation could not be completed.",
+        },
+      },
+      { status: 500 },
+    );
+  }
+}
+
 export async function readJsonBody(request: Request): Promise<unknown> {
   try {
     return await request.json();

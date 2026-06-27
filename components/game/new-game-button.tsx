@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { readJsonResponse } from "@/lib/game/game-client-http";
 
 type CreateGameResponse = {
   game?: { id?: unknown };
@@ -33,17 +34,17 @@ export function NewGameButton({
 
     try {
       const response = await fetch("/api/games", { method: "POST" });
-      const payload = (await response.json()) as CreateGameResponse;
+      const payload = (await readJsonResponse(response)) as CreateGameResponse | null;
 
       if (!response.ok) {
         throw new Error(
-          typeof payload.error?.message === "string"
+          typeof payload?.error?.message === "string"
             ? payload.error.message
             : "The game could not be created.",
         );
       }
 
-      if (typeof payload.game?.id !== "string") {
+      if (typeof payload?.game?.id !== "string") {
         throw new Error("The server returned an invalid game.");
       }
 

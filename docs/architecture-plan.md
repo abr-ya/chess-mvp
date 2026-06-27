@@ -212,6 +212,8 @@ GET /api/games/:id/pgn
 
 Feature 02 uses App Router Route Handlers for this HTTP boundary. Route files stay thin and delegate authentication, authorization, validation, and game behavior to the testable `GameApi` and `GameService` layers.
 
+Feature 02-a hardens this boundary before engine work: routine requests should resolve existing internal users without repeated profile/rating writes, move submission should avoid duplicate snapshot reads, and the client should display legal local moves optimistically while the server remains authoritative. Socket.IO, server clocks, and premoves remain separate requirements for later blitz and bullet play.
+
 ### Socket.IO Events
 
 ```text
@@ -284,4 +286,4 @@ Still deferred:
 
 - Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
 
-Current implementation handoff lives in [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md).
+Current implementation handoff lives in [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md). Continue to [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md) after the performance gate passes.

@@ -6,6 +6,7 @@ import { ChessboardView } from "@/components/chessboard/chessboard-view";
 import { NewGameButton } from "@/components/game/new-game-button";
 import { Badge } from "@/components/ui/badge";
 import type { ClientGameSnapshot, ClientGameMove } from "@/lib/game/client-types";
+import { readJsonResponse } from "@/lib/game/game-client-http";
 
 type GameScreenProps = {
   gameId: string;
@@ -205,17 +206,17 @@ async function loadGame(gameId: string, signal: AbortSignal) {
     signal,
     cache: "no-store",
   });
-  const payload = (await response.json()) as GameResponse;
+  const payload = (await readJsonResponse(response)) as GameResponse | null;
 
   if (!response.ok) {
     throw new Error(
-      typeof payload.error?.message === "string"
+      typeof payload?.error?.message === "string"
         ? payload.error.message
         : "The game could not be loaded.",
     );
   }
 
-  if (!payload.game || typeof payload.game.currentFen !== "string") {
+  if (!payload?.game || typeof payload.game.currentFen !== "string") {
     throw new Error("The server returned an invalid game.");
   }
 

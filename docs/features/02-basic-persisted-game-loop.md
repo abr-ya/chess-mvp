@@ -11,7 +11,7 @@ Deliver the first playable server-backed manual game flow:
 - games, participants, moves, and positions are persisted;
 - the browser shows a playable chessboard and SAN move list;
 - games finish by core chess rules;
-- the implementation is ready for Feature 03 computer replies and early position analysis without changing the core game model.
+- the implementation is ready for Feature 02-a performance hardening and then Feature 03 computer replies and early position analysis without changing the core game model.
 
 ## Stop Point
 
@@ -26,7 +26,7 @@ Do not start these items in Feature 02:
 - rating updates after completed games;
 - full PGN export and game history UI.
 
-After Feature 02, prioritize the smallest useful engine slice before broader online play: a minimal `EngineService`, computer reply moves, and a first analysis screen that accepts or sets up a FEN position and returns a bounded evaluation.
+After Feature 02, complete [Feature 02-a. Game Loop Performance Hardening](./02-a-game-loop-performance.md) before starting engine work.
 
 ## Assumptions
 
@@ -126,4 +126,4 @@ Expanded Playwright coverage with a second Clerk user is deferred until the E2E 
 
 ## Next Task
 
-Continue with [Feature 03. Play Against Computer and Early Analysis](./03-computer-play-analysis.md), starting with the engine runtime decision.
+Continue with [Feature 02-a. Game Loop Performance Hardening](./02-a-game-loop-performance.md), starting with request measurement and tracing.

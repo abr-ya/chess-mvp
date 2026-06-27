@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Chessboard, type ChessboardOptions } from "react-chessboard";
 
 import { createOptimisticMove } from "@/lib/game/chessboard-move";
+import { readJsonResponse } from "@/lib/game/game-client-http";
 import type { ClientGameSnapshot } from "@/lib/game/client-types";
 
 type ChessboardViewProps = {
@@ -168,17 +169,17 @@ async function submitMove(
       body: JSON.stringify(command),
     },
   );
-  const payload = (await response.json()) as GameResponse;
+  const payload = (await readJsonResponse(response)) as GameResponse | null;
 
   if (!response.ok) {
     throw new Error(
-      typeof payload.error?.message === "string"
+      typeof payload?.error?.message === "string"
         ? payload.error.message
         : "The move could not be submitted.",
     );
   }
 
-  if (typeof payload.game?.currentFen !== "string") {
+  if (typeof payload?.game?.currentFen !== "string") {
     throw new Error("The server returned an invalid game position.");
   }
 

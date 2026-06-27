@@ -1,6 +1,6 @@
 # Feature 03. Play Against Computer and Early Analysis
 
-This feature builds on the persisted game loop from Feature 02. It introduces one reusable engine boundary for computer replies and bounded position analysis without coupling Stockfish directly to route handlers or UI components.
+This feature builds on the persisted game loop from Feature 02 and the request-path hardening from Feature 02-a. It introduces one reusable engine boundary for computer replies and bounded position analysis without coupling Stockfish directly to route handlers or UI components.
 
 ## Feature Goal
 
