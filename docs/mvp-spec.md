@@ -524,7 +524,7 @@ The MVP is complete when:
 
 - Authentication provider decision is described separately in [Authentication System Options](./decisions/auth-options.md).
 - Technology stack and first implementation architecture are described separately in [Architecture Plan](./architecture-plan.md).
-- Current executable implementation order is tracked in [Feature 01. MVP Core](./features/01-mvp-core.md).
+- Current executable implementation order is tracked in [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md), building on the completed [Feature 01 foundation](./features/01-application-game-foundation.md).
 - Should guest mode be part of the first MVP, or should all games require registered users?
 - Should human games be rated by default?
 - Should draw offers be included in the MVP?

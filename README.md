@@ -33,14 +33,17 @@ npm run test
 
 - [Docs index](./docs/README.md)
 - [Development Backlog](./docs/backlog.md)
-- [MVP Core Feature Plan](./docs/features/01-mvp-core.md)
+- [Application and Game Foundation](./docs/features/01-application-game-foundation.md)
+- [Basic Persisted Game Loop](./docs/features/02-basic-persisted-game-loop.md)
 - [Planning Structure](./docs/planning-structure.md)
 - [Architecture Plan](./docs/architecture-plan.md)
 
 ## Current Implementation Slice
 
-Feature 01 starts with the scaffold, domain package layout, authentication shell,
-Prisma schema, server-side game validation, and a browser chessboard surface.
+Feature 01 provides the scaffold, domain package layout, authentication shell,
+Prisma schema, local user initialization, and game domain contracts. Feature 02
+is the active implementation slice for server-side game validation and the
+playable browser chessboard flow.
 
 The current scaffold includes the initial product routes:
 

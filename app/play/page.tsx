@@ -16,7 +16,7 @@ export default function PlayPage() {
           <h1 className="mt-6 text-4xl font-semibold">Play</h1>
           <p className="mt-4 text-base leading-7 text-[#5d5548]">
             This route is the primary entry point for creating a basic manual
-            game during Feature 01.
+            game during Feature 02.
           </p>
           <Link
             href="/games/example"

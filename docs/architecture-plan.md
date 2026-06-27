@@ -270,7 +270,7 @@ Resolved decisions:
 
 Still deferred:
 
-- Choose the exact React chessboard package during `Stage 09. Browser Chessboard` after checking current maintenance status and React 19 / Next.js 16 compatibility.
-- Choose the exact Stockfish package, binary, or WASM strategy during Feature 02 engine implementation.
+- Choose the exact React chessboard package during `Feature 02, Stage 03. Browser Chessboard` after checking current maintenance status and React 19 / Next.js 16 compatibility.
+- Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
 
-Current implementation handoff lives in [Feature 01. MVP Core](./features/01-mvp-core.md).
+Current implementation handoff lives in [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md).

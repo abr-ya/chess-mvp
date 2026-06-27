@@ -16,17 +16,17 @@ Use `Feature` for a large product workstream from the roadmap.
 
 Examples:
 
-- `Feature 01. MVP Core`
-- `Feature 02. Play Against Computer and Early Analysis`
-- `Feature 03. Time Controls`
+- `Feature 01. Application and Game Foundation`
+- `Feature 02. Basic Persisted Game Loop`
+- `Feature 03. Play Against Computer and Early Analysis`
 
 Use `Stage` for the ordered implementation slices inside one feature plan.
 
 Examples:
 
-- `Stage 07. GameService Core`
-- `Stage 08. API or Server Action Surface`
-- `Stage 09. Browser Chessboard`
+- `Stage 01. GameService Core`
+- `Stage 02. API or Server Action Surface`
+- `Stage 03. Browser Chessboard`
 
 Use `Task` for checklist items inside a stage.
 
@@ -40,9 +40,9 @@ NN-feature-name.md
 
 Examples:
 
-- `01-mvp-core.md`
-- `02-computer-play-analysis.md`
-- `03-time-controls.md`
+- `01-application-game-foundation.md`
+- `02-basic-persisted-game-loop.md`
+- `03-computer-play-analysis.md`
 
 Create a feature file when a roadmap item needs a detailed checklist or a resumable implementation handoff. Do not create empty feature files only to mirror the whole roadmap.
 
