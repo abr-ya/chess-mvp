@@ -29,4 +29,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 01 of Feature 02 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.
+Start Stage 02 of Feature 02 by choosing the server boundary and exposing authenticated create-game, get-game, and submit-move operations.

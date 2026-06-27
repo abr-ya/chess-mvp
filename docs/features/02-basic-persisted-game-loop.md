@@ -39,21 +39,21 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 ## Stage 01. GameService Core
 
-- [ ] Add `chess.js`.
-- [ ] Implement basic game creation with initial FEN.
-- [ ] Create two participants for the game, even when Feature 02 has no online opponent.
-- [ ] Implement legal move application through `chess.js`.
-- [ ] Persist UCI-like move coordinates, SAN, move number, side, and FEN after move.
-- [ ] Update `Game.currentFen` after each accepted move.
-- [ ] Reject illegal moves.
-- [ ] Reject moves for the wrong side.
-- [ ] Reject moves after a finished game.
-- [ ] Detect checkmate.
-- [ ] Detect stalemate.
-- [ ] Detect draw by insufficient material or impossible continuation where supported by `chess.js`.
-- [ ] Store final game status, result, and termination reason.
-- [ ] Return a complete game snapshot after create and move operations.
-- [ ] Add Vitest coverage for legal moves, illegal moves, SAN output, turn checks, and completion.
+- [x] Add `chess.js`.
+- [x] Implement basic game creation with initial FEN.
+- [x] Create two participants for the game, even when Feature 02 has no online opponent.
+- [x] Implement legal move application through `chess.js`.
+- [x] Persist UCI-like move coordinates, SAN, move number, side, and FEN after move.
+- [x] Update `Game.currentFen` after each accepted move.
+- [x] Reject illegal moves.
+- [x] Reject moves for the wrong side.
+- [x] Reject moves after a finished game.
+- [x] Detect checkmate.
+- [x] Detect stalemate.
+- [x] Detect draw by insufficient material or impossible continuation where supported by `chess.js`.
+- [x] Store final game status, result, and termination reason.
+- [x] Return a complete game snapshot after create and move operations.
+- [x] Add Vitest coverage for legal moves, illegal moves, SAN output, turn checks, and completion.
 
 ## Stage 02. API or Server Action Surface
 
@@ -113,15 +113,15 @@ After Feature 02, prioritize the smallest useful engine slice before broader onl
 
 - [ ] A signed-in user can create a basic game.
 - [ ] The game screen renders a stable chessboard from persisted FEN.
-- [ ] Legal moves are accepted by the server-side game service.
-- [ ] Illegal moves are rejected by the server-side game service.
+- [x] Legal moves are accepted by the server-side game service.
+- [x] Illegal moves are rejected by the server-side game service.
 - [ ] SAN move list is persisted and displayed.
-- [ ] Checkmate and stalemate end the game.
-- [ ] Completed games reject further moves.
-- [ ] Core behavior has Vitest coverage.
+- [x] Checkmate and stalemate end the game.
+- [x] Completed games reject further moves.
+- [x] Core behavior has Vitest coverage.
 - [ ] Lint, typecheck, tests, and the browser-flow check pass.
 - [ ] The backlog and docs point to the next stage or feature task.
 
 ## Next Task
 
-Start Stage 01 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.
+Start Stage 02 by choosing the server boundary and exposing authenticated create-game, get-game, and submit-move operations.

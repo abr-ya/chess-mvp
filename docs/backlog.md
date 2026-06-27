@@ -34,10 +34,10 @@ Detailed feature plan: [Feature 02. Basic Persisted Game Loop](./features/02-bas
 Feature 02 owns the first playable server-backed manual game flow.
 
 - [ ] Browser chessboard.
-- [ ] Server-side legal move validation.
+- [x] Server-side legal move validation.
 - [ ] Move list in SAN.
-- [ ] Game completion by checkmate, stalemate, and impossible continuation.
-- [ ] Position and move persistence.
+- [x] Game completion by checkmate, stalemate, and impossible continuation.
+- [x] Position and move persistence.
 
 ## Feature 03. Play Against Computer and Early Analysis
 
@@ -187,4 +187,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 01 from the Feature 02 plan by adding `chess.js` and implementing the first server-side game operations.
+Start Stage 02 from the Feature 02 plan by choosing the server boundary and exposing authenticated game operations.
