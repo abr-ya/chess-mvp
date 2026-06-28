@@ -1,4 +1,5 @@
 import {
+  AuthProvider,
   GameMode,
   GameResult,
   GameStatus,
@@ -68,11 +69,29 @@ export class PrismaGameRepository implements GameRepository {
   async getGameForMove(
     gameId: string,
     idempotencyKey: string,
+    providerUserId?: string,
   ) {
     const record = await this.database("game.findUnique.forMove", () =>
       prisma.game.findUnique({
         where: { id: gameId },
-        include: gameSnapshotInclude,
+        include: {
+          moves: true,
+          participants: {
+            include: {
+              user: {
+                select: {
+                  authIdentities: {
+                    where: {
+                      provider: AuthProvider.CLERK,
+                      providerUserId: providerUserId ?? "",
+                    },
+                    select: { id: true },
+                  },
+                },
+              },
+            },
+          },
+        },
       }),
     );
 
@@ -82,6 +101,12 @@ export class PrismaGameRepository implements GameRepository {
           isDuplicate: record.moves.some(
             (move) => move.idempotencyKey === idempotencyKey,
           ),
+          isAuthorized:
+            !providerUserId ||
+            record.participants.some(
+              (participant) =>
+                participant.user?.authIdentities.length === 1,
+            ),
         }
       : null;
   }

@@ -269,6 +269,7 @@ class MemoryGameRepository implements GameRepository {
   async getGameForMove(
     gameId: string,
     idempotencyKey: string,
+    providerUserId?: string,
   ) {
     const exists = this.appendedMoves.some(
       (move) =>
@@ -277,7 +278,13 @@ class MemoryGameRepository implements GameRepository {
 
     const game = await this.getGame(gameId);
 
-    return game ? { game, isDuplicate: exists } : null;
+    return game
+      ? {
+          game,
+          isDuplicate: exists,
+          isAuthorized: providerUserId !== "another-user",
+        }
+      : null;
   }
 
   async appendMove(input: AppendStoredMoveInput) {

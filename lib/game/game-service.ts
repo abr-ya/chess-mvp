@@ -43,6 +43,7 @@ export type PersistedMoveResult = {
 export type GameForMove = {
   game: GameSnapshot;
   isDuplicate: boolean;
+  isAuthorized: boolean;
 };
 
 export interface GameRepository {
@@ -51,6 +52,7 @@ export interface GameRepository {
   getGameForMove(
     gameId: string,
     idempotencyKey: string,
+    providerUserId?: string,
   ): Promise<GameForMove | null>;
   appendMove(input: AppendStoredMoveInput): Promise<PersistedMoveResult>;
 }
@@ -119,10 +121,14 @@ export class GameService {
 
   async submitMove(
     command: MoveCommand,
-    requestingUserId?: string,
+    requestingProviderUserId?: string,
   ): Promise<GameSnapshot> {
     const loadGame = () =>
-      this.repository.getGameForMove(command.gameId, command.idempotencyKey);
+      this.repository.getGameForMove(
+        command.gameId,
+        command.idempotencyKey,
+        requestingProviderUserId,
+      );
     const gameForMove = this.trace
       ? await this.trace.measure("game-loading", loadGame)
       : await loadGame();
@@ -131,14 +137,9 @@ export class GameService {
       throw new GameServiceError("GAME_NOT_FOUND", "Game not found.");
     }
 
-    const { game: snapshot, isDuplicate } = gameForMove;
+    const { game: snapshot, isAuthorized, isDuplicate } = gameForMove;
 
-    if (
-      requestingUserId &&
-      !snapshot.participants.some(
-        (participant) => participant.userId === requestingUserId,
-      )
-    ) {
+    if (requestingProviderUserId && !isAuthorized) {
       throw new GameServiceError(
         "FORBIDDEN",
         "You are not a participant in this game.",
@@ -233,6 +234,7 @@ export class GameService {
       const recovered = await this.repository.getGameForMove(
         command.gameId,
         command.idempotencyKey,
+        requestingProviderUserId,
       );
 
       if (recovered?.isDuplicate) {
