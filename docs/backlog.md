@@ -52,24 +52,46 @@ Feature 02-a is complete. It reduced routine user synchronization, compacted mov
 - [x] Confirm immediate optimistic board feedback and rollback.
 - [x] Record the remaining realtime latency requirements for blitz and bullet.
 
-## Feature 03. Play Against Computer and Early Analysis
+## Feature 03. Custom Position Setup and FEN
 
-Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
+Detailed feature plan: [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md)
 
-- [ ] Chess engine integration.
-- [ ] Difficulty-level adapter.
-- [ ] Color selection.
-- [ ] Computer reply move.
-- [ ] Calculation time limit.
-- [ ] Rating calculation against the computer's estimated Elo.
-- [ ] Engine error handling without losing the game.
-- [ ] Minimal analysis screen.
-- [ ] FEN input or position setup for analysis.
-- [ ] Position validation before analysis.
-- [ ] Bounded Stockfish evaluation for a single position.
-- [ ] Show score and at least one suggested best line.
+- [ ] Visual position editor and piece palette.
+- [ ] Clear and reset board actions.
+- [ ] Side-to-move and castling controls.
+- [ ] FEN import, validation, copy, and export.
+- [ ] Reusable validated-position handoff for later analysis.
 
-## Feature 04. Time Controls
+## Feature 04. PGN File Import and Export
+
+Detailed feature plan: [Feature 04. PGN File Import and Export](./features/04-pgn-file-import-export.md)
+
+- [ ] Generate PGN from structured game records.
+- [ ] Copy and download a `.pgn` file.
+- [ ] Upload or paste and validate PGN.
+- [ ] Persist imported moves and positions atomically.
+- [ ] Basic move-by-move imported-game review.
+
+## Feature 05. Engine Integration and Position Evaluation
+
+Detailed feature plan: [Feature 05. Engine Integration and Position Evaluation](./features/05-engine-position-evaluation.md)
+
+- [ ] Select and pin the Stockfish runtime.
+- [ ] Add a reusable `EngineService` boundary.
+- [ ] Evaluate a validated FEN with a bounded calculation.
+- [ ] Show centipawn or mate score and best move.
+- [ ] Handle timeout, cancellation, and engine failure.
+
+## Feature 06. Play Against Computer
+
+Detailed feature plan: [Feature 06. Play Against Computer](./features/06-play-against-computer.md)
+
+- [ ] Difficulty-level adapter and color selection.
+- [ ] Legal persisted computer replies.
+- [ ] Calculation time limit and failure recovery.
+- [ ] Computer rating result and idempotent rating update.
+
+## Feature 07. Time Controls
 
 - [ ] Server-side game clocks.
 - [ ] Preset controls: 1+0, 3+0, 3+2, 5+0, 10+0, 15+10.
@@ -81,7 +103,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Game completion by timeout.
 - [ ] Reconnect with current clock recovery.
 
-## Feature 05. Online Human Play
+## Feature 08. Online Human Play
 
 - [ ] Create a game by invite link.
 - [ ] Second player joins the game.
@@ -92,18 +114,15 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Draw offer.
 - [ ] Game completion and rating update for both players.
 
-## Feature 06. PGN and History
+## Feature 09. Game History and Review
 
-- [ ] PGN generation with required tags.
-- [ ] Store PGN on the game record.
 - [ ] "My Games" page.
 - [ ] Filters by mode and result.
 - [ ] Game review page.
 - [ ] Move navigation.
-- [ ] Copy PGN.
-- [ ] Download PGN.
+- [ ] Open PGN imported in Feature 04 from history.
 
-## Feature 07. Matchmaking Improvements
+## Feature 10. Matchmaking Improvements
 
 - [ ] Quick play with waiting queue.
 - [ ] Pairing by nearby rating.
@@ -112,9 +131,9 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Protection against joining multiple matches at once.
 - [ ] Unrated casual games.
 
-## Feature 08. Game Analysis
+## Feature 11. Full Game Analysis
 
-- [ ] Build on the early analysis slice instead of adding a second engine integration.
+- [ ] Build on Feature 05 `EngineService` instead of adding a second engine integration.
 - [ ] Run engine analysis after game completion.
 - [ ] Position evaluation after each move.
 - [ ] Best move and missed opportunity.
@@ -123,7 +142,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Store analysis job separately from the game.
 - [ ] Limit analysis through quotas or a job queue.
 
-## Feature 09. Puzzles and Training
+## Feature 12. Puzzles and Training
 
 - [ ] Import positions from FEN/PGN.
 - [ ] Puzzle database.
@@ -133,7 +152,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Puzzle rating.
 - [ ] User statistics by theme.
 
-## Feature 10. Tournaments
+## Feature 13. Tournaments
 
 - [ ] Tournament creation.
 - [ ] Tournament types: arena, Swiss, round-robin.
@@ -144,7 +163,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Tie-break rules.
 - [ ] Tournament page.
 
-## Feature 11. Social and Community Features
+## Feature 14. Social and Community Features
 
 - [ ] User profile.
 - [ ] Public game history.
@@ -154,7 +173,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Game comments.
 - [ ] Reports and moderation.
 
-## Feature 12. Anti-Cheat and Fair Play
+## Feature 15. Anti-Cheat and Fair Play
 
 - [ ] Detect suspicious engine correlation.
 - [ ] Analyze move timing.
@@ -163,7 +182,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Restrictions for new accounts.
 - [ ] Ban policy.
 
-## Feature 13. Mobile Applications
+## Feature 16. Mobile Applications
 
 - [ ] Stabilize the public client API.
 - [ ] Push notifications for opponent moves.
@@ -173,7 +192,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Android application.
 - [ ] Deep links for games and invitations.
 
-## Feature 14. Desktop Client
+## Feature 17. Desktop Client
 
 - [ ] Define the goal of the desktop client: offline analysis, play, training, or all of them.
 - [ ] Choose the technology: Python/PySide, Electron, Tauri, or native.
@@ -182,7 +201,7 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 - [ ] Support a local engine for analysis.
 - [ ] Add PGN import and export.
 
-## Feature 15. Monetization
+## Feature 18. Monetization
 
 - [ ] Premium game analysis.
 - [ ] Advanced statistics.
@@ -202,4 +221,4 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 
 ## Next Task
 
-Start Stage 01 of Feature 03 by defining the reusable engine boundary and selecting the exact Stockfish runtime.
+Start Stage 01 of Feature 03 by defining the editable-position model and FEN validation rules.

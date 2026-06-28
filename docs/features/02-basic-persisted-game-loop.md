@@ -11,7 +11,7 @@ Deliver the first playable server-backed manual game flow:
 - games, participants, moves, and positions are persisted;
 - the browser shows a playable chessboard and SAN move list;
 - games finish by core chess rules;
-- the implementation is ready for Feature 02-a performance hardening and then Feature 03 computer replies and early position analysis without changing the core game model.
+- the implementation is ready for Feature 02-a performance hardening, Feature 03 custom position setup, and the later engine and computer-play features without changing the core game model.
 
 ## Stop Point
 

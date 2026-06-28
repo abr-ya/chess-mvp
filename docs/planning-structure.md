@@ -19,7 +19,7 @@ Examples:
 - `Feature 01. Application and Game Foundation`
 - `Feature 02. Basic Persisted Game Loop`
 - `Feature 02-a. Game Loop Performance Hardening`
-- `Feature 03. Play Against Computer and Early Analysis`
+- `Feature 03. Custom Position Setup and FEN`
 
 Use `Stage` for the ordered implementation slices inside one feature plan.
 
@@ -45,7 +45,7 @@ Examples:
 - `01-application-game-foundation.md`
 - `02-basic-persisted-game-loop.md`
 - `02-a-game-loop-performance.md`
-- `03-computer-play-analysis.md`
+- `03-custom-position-setup.md`
 
 Create a feature file when a roadmap item needs a detailed checklist or a resumable implementation handoff. Do not create empty feature files only to mirror the whole roadmap.
 

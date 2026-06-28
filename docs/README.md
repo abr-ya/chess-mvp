@@ -22,8 +22,14 @@ Initial product documentation for the chess platform MVP.
   Completed first playable persisted game loop.
 - [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
   Completed hardening for the authenticated game request path.
-- [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
-  Next executable plan for computer play and bounded position analysis.
+- [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md)
+  Active executable plan for visual position construction and FEN workflows.
+- [Feature 04. PGN File Import and Export](./features/04-pgn-file-import-export.md)
+  Planned file-transfer boundary for complete games.
+- [Feature 05. Engine Integration and Position Evaluation](./features/05-engine-position-evaluation.md)
+  Planned reusable engine boundary, score, and best move.
+- [Feature 06. Play Against Computer](./features/06-play-against-computer.md)
+  Planned computer opponent built on the shared engine service.
 
 ## Working Assumptions
 
@@ -35,4 +41,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 01 of Feature 03 by defining the reusable engine boundary and selecting the exact Stockfish runtime.
+Start Stage 01 of Feature 03 by defining the editable-position model and FEN validation rules.

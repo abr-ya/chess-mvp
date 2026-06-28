@@ -524,7 +524,7 @@ The MVP is complete when:
 
 - Authentication provider decision is described separately in [Authentication System Options](./decisions/auth-options.md).
 - Technology stack and first implementation architecture are described separately in [Architecture Plan](./architecture-plan.md).
-- Current executable implementation order is tracked in [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md), before [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md). It builds on the completed [Feature 01 foundation](./features/01-application-game-foundation.md) and [Feature 02 game loop](./features/02-basic-persisted-game-loop.md).
+- Current executable implementation order continues from the completed [Feature 02-a performance hardening](./features/02-a-game-loop-performance.md) into [Feature 03 position setup](./features/03-custom-position-setup.md), [Feature 04 PGN file transfer](./features/04-pgn-file-import-export.md), [Feature 05 engine evaluation](./features/05-engine-position-evaluation.md), and [Feature 06 computer play](./features/06-play-against-computer.md).
 - Should guest mode be part of the first MVP, or should all games require registered users?
 - Should human games be rated by default?
 - Should draw offers be included in the MVP?

@@ -95,4 +95,4 @@ The HTTP path now meets the development target for manual and computer play. It 
 
 ## Next Task
 
-Continue with [Feature 03. Play Against Computer and Early Analysis](./03-computer-play-analysis.md).
+Continue with [Feature 03. Custom Position Setup and FEN](./03-custom-position-setup.md).

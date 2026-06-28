@@ -48,7 +48,10 @@ npm run test:e2e
 - [Application and Game Foundation](./docs/features/01-application-game-foundation.md)
 - [Basic Persisted Game Loop](./docs/features/02-basic-persisted-game-loop.md)
 - [Game Loop Performance Hardening](./docs/features/02-a-game-loop-performance.md)
-- [Play Against Computer and Early Analysis](./docs/features/03-computer-play-analysis.md)
+- [Custom Position Setup and FEN](./docs/features/03-custom-position-setup.md)
+- [PGN File Import and Export](./docs/features/04-pgn-file-import-export.md)
+- [Engine Integration and Position Evaluation](./docs/features/05-engine-position-evaluation.md)
+- [Play Against Computer](./docs/features/06-play-against-computer.md)
 - [Planning Structure](./docs/planning-structure.md)
 - [Architecture Plan](./docs/architecture-plan.md)
 
@@ -58,7 +61,7 @@ Features 01, 02, and 02-a are complete. The application now provides authenticat
 the persisted game model, server-authoritative move validation, an interactive
 browser chessboard, SAN move history, game completion, and an authenticated
 Playwright persistence check, optimistic local moves, lightweight request identity,
-and compact atomic move persistence. Feature 03 is the next implementation slice.
+and compact atomic move persistence. Feature 03 position setup is the next implementation slice.
 
 The current scaffold includes the initial product routes:
 

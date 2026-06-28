@@ -284,6 +284,6 @@ Resolved decisions:
 
 Still deferred:
 
-- Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
+- Choose the exact Stockfish package, binary, or WASM strategy during Feature 05 engine implementation.
 
-Feature 02-a now provides a read-only existing-user request path, one authoritative move snapshot read, atomic concurrency-protected persistence, and an updated snapshot without a routine post-write reload. Current implementation handoff is [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md).
+Feature 02-a now provides a read-only existing-user request path, one authoritative move snapshot read, atomic concurrency-protected persistence, and an updated snapshot without a routine post-write reload. Current implementation handoff is [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md). PGN file transfer, engine evaluation, and computer play follow as separate Features 04, 05, and 06.
