@@ -41,4 +41,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 01 of Feature 03 by defining the editable-position model and FEN validation rules.
+Start Stage 02 of Feature 03 by adding the reusable position setup board, piece palette, and clear/reset interactions.

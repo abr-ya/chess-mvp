@@ -16,10 +16,10 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Stage 01. Position Domain
 
-- [ ] Define editable-position state independent of the chessboard package.
-- [ ] Convert editable state to and from FEN.
-- [ ] Validate king count, pawn placement, side to move, castling rights, and FEN structure.
-- [ ] Add unit tests for valid, invalid, empty, and edge-case positions.
+- [x] Define editable-position state independent of the chessboard package.
+- [x] Convert editable state to and from FEN.
+- [x] Validate king count, pawn placement, side to move, castling rights, and FEN structure.
+- [x] Add unit tests for valid, invalid, empty, and edge-case positions.
 
 ## Stage 02. Board Editor
 
@@ -52,4 +52,4 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Next Task
 
-Start Stage 01 by defining the editable-position model and FEN validation rules.
+Start Stage 02 by adding the reusable `PositionSetupBoard`, piece palette, and clear/reset interactions.
