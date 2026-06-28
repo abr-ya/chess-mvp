@@ -13,9 +13,9 @@ Recommended MVP stack:
 - ORM and migrations: Prisma ORM 7.8.0.
 - Real-time transport: Socket.IO on a dedicated Node.js real-time server process.
 - Chess rules: `chess.js` on the server for move validation, SAN, FEN, and game-over detection.
-- Chessboard UI: a React chessboard component wrapped behind a local `ChessboardView` component.
+- Chessboard UI: `react-chessboard` 5.10.0 wrapped behind a local `ChessboardView` component.
 - Engine integration and analysis: Stockfish behind an internal `EngineService` adapter, initially as a server-side process or WASM worker.
-- Testing: Vitest for domain services, Playwright for browser game flows.
+- Testing: Vitest 4.1.9 for domain services and Playwright 1.61.1 with `@clerk/testing` 2.0.4 for authenticated browser game flows.
 
 ## Version Policy
 
@@ -23,6 +23,9 @@ The MVP should use pinned stable versions for core framework and database toolin
 
 - Next.js: `16.2.9`;
 - Prisma CLI and `@prisma/client`: `7.8.0`;
+- Vitest: `4.1.9`;
+- Playwright: `1.61.1`;
+- Clerk testing helpers: `2.0.4`;
 - Database: PostgreSQL, with the concrete hosted/local version documented when the deployment target is chosen.
 
 The project may update to newer stable Next.js or Prisma releases as they become available, but updates should be intentional and verified. Patch and minor updates are acceptable when they do not introduce breaking changes for the features the MVP uses. Major upgrades, canary releases, release candidates, or changes with documented breaking behavior should be treated as separate upgrade tasks with migration notes and validation.
@@ -55,7 +58,7 @@ The chess-specific dependencies should stay isolated behind local application in
 - The React chessboard package is a view dependency only. It must be wrapped by `ChessboardView`, which receives FEN, orientation, legal UI hints, and move callbacks. Pages and services should not depend directly on the package API.
 - Stockfish is the engine dependency. It must be wrapped by `EngineService`, which can support both engine moves and position analysis.
 
-The exact React chessboard package should be selected during the browser chessboard task after checking current maintenance status and React 19 / Next.js 16 compatibility. The exact Stockfish package, binary, or WASM strategy should be selected during engine implementation.
+The browser chessboard package decision is recorded in [Chessboard Package Decision](./decisions/chessboard-package.md). The exact Stockfish package, binary, or WASM strategy should be selected during engine implementation.
 
 ## Service Architecture
 
@@ -185,14 +188,20 @@ Important modeling rules:
 ### HTTP
 
 ```text
+POST /api/games
+  Creates a basic manual game for the authenticated user.
+
+GET /api/games/:id
+  Returns the latest game snapshot for an authorized participant.
+
+POST /api/games/:id/moves
+  Validates and persists a move for an authorized participant.
+
 POST /api/games/computer
   Creates a computer game.
 
 POST /api/games/invite
   Creates a waiting human game and returns an invite link.
-
-GET /api/games/:id
-  Returns the latest game snapshot for an authorized participant.
 
 GET /api/games
   Returns the current user's paginated game history.
@@ -200,6 +209,10 @@ GET /api/games
 GET /api/games/:id/pgn
   Returns PGN for a completed game.
 ```
+
+Feature 02 uses App Router Route Handlers for this HTTP boundary. Route files stay thin and delegate authentication, authorization, validation, and game behavior to the testable `GameApi` and `GameService` layers.
+
+Feature 02-a hardens this boundary before engine work: routine requests should resolve existing internal users without repeated profile/rating writes, move submission should avoid duplicate snapshot reads, and the client should display legal local moves optimistically while the server remains authoritative. Socket.IO, server clocks, and premoves remain separate requirements for later blitz and bullet play.
 
 ### Socket.IO Events
 
@@ -267,10 +280,10 @@ Resolved decisions:
 - The UI language is English unless a later product decision changes it.
 - Prisma and PostgreSQL are initialized with Prisma Client generated into `lib/generated/prisma`.
 - Local database setup is environment-variable driven through `DATABASE_URL`; a Docker-specific workflow is not required yet.
+- `react-chessboard` 5.10.0 is the browser board package; see [Chessboard Package Decision](./decisions/chessboard-package.md).
 
 Still deferred:
 
-- Choose the exact React chessboard package during `Feature 02, Stage 03. Browser Chessboard` after checking current maintenance status and React 19 / Next.js 16 compatibility.
 - Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
 
-Current implementation handoff lives in [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md).
+Current implementation handoff lives in [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md). Continue to [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md) after the performance gate passes.

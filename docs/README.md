@@ -8,6 +8,8 @@ Initial product documentation for the chess platform MVP.
   Product scope reference for the broader MVP vision and acceptance criteria.
 - [Authentication System Options](./decisions/auth-options.md)
   Authentication decision record and provider comparison.
+- [Chessboard Package Decision](./decisions/chessboard-package.md)
+  React chessboard package comparison and selected integration boundary.
 - [Architecture Plan](./architecture-plan.md)
   Architecture decision reference for stack, boundaries, service ownership, and version policy.
 - [Planning Structure](./planning-structure.md)
@@ -17,7 +19,11 @@ Initial product documentation for the chess platform MVP.
 - [Feature 01. Application and Game Foundation](./features/01-application-game-foundation.md)
   Completed foundation for the application shell, persistence, authentication, and game domain.
 - [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
-  Active executable plan for the first playable server-backed game flow.
+  Completed first playable persisted game loop.
+- [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
+  Active performance gate for the authenticated game request path.
+- [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
+  Next executable plan for computer play and bounded position analysis.
 
 ## Working Assumptions
 
@@ -29,4 +35,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 01 of Feature 02 by adding `chess.js` and implementing the first `GameService` create-game and legal-move operations.
+Start Stage 01 of Feature 02-a by measuring request phases and database-operation counts for warm game reads and move submissions.

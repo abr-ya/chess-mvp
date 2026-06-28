@@ -31,15 +31,30 @@ Feature 01 is complete. It establishes the application shell and game-domain fou
 
 Detailed feature plan: [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
 
-Feature 02 owns the first playable server-backed manual game flow.
+Feature 02 is complete. It delivers the first playable, persisted, server-backed manual game flow.
 
-- [ ] Browser chessboard.
-- [ ] Server-side legal move validation.
-- [ ] Move list in SAN.
-- [ ] Game completion by checkmate, stalemate, and impossible continuation.
-- [ ] Position and move persistence.
+- [x] Browser chessboard.
+- [x] Server-side legal move validation.
+- [x] Move list in SAN.
+- [x] Game completion by checkmate, stalemate, and impossible continuation.
+- [x] Position and move persistence.
+
+## Feature 02-a. Game Loop Performance Hardening
+
+Detailed feature plan: [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
+
+Feature 02-a is the active performance gate before engine work.
+
+- [ ] Measure current auth, game-read, and move-persistence latency.
+- [ ] Add a lightweight existing-user request path.
+- [ ] Remove redundant user writes and duplicate game reads.
+- [ ] Compact atomic move persistence and snapshot return.
+- [ ] Confirm immediate optimistic board feedback and rollback.
+- [ ] Record the remaining realtime latency requirements for blitz and bullet.
 
 ## Feature 03. Play Against Computer and Early Analysis
+
+Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
 
 - [ ] Chess engine integration.
 - [ ] Difficulty-level adapter.
@@ -187,4 +202,4 @@ Feature 02 owns the first playable server-backed manual game flow.
 
 ## Next Task
 
-Start Stage 01 from the Feature 02 plan by adding `chess.js` and implementing the first server-side game operations.
+Start Stage 01 of Feature 02-a by measuring request phases and database-operation counts for warm game reads and move submissions.

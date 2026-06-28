@@ -5,19 +5,28 @@ and a server-authoritative game model.
 
 ## Getting Started
 
-Install dependencies and run the development server:
+Install dependencies and create the local environment file:
 
 ```bash
 npm install
-cp .env.example .env.local
+cp .env.example .env
+```
+
+Configure these required values in `.env`:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the same Clerk application;
+- `DATABASE_URL` for the PostgreSQL database.
+
+Apply the database migrations and start the application:
+
+```bash
+npx prisma migrate deploy
 npm run dev
 ```
 
-Fill `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in
-`.env.local` before using protected routes such as `/play` and `/games/[id]`.
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see
-the result.
+the application. Sign in, open `/play`, create a game, and use drag/drop or
+click-to-move on the board. Games and SAN moves persist across page reloads.
 
 ## Quality Commands
 
@@ -25,9 +34,12 @@ the result.
 npm run lint
 npm run typecheck
 npm run test
+npm run test:e2e
 ```
 
 `npm run test` runs the Vitest domain test suite.
+
+`npm run test:e2e` runs the authenticated Playwright game flow against the configured PostgreSQL database. Before the first run, install Chromium with `npx playwright install chromium` if no compatible system Chromium is available. Set `E2E_CLERK_USER_EMAIL` to one existing user from the same Clerk development application. The test creates and removes its own game records.
 
 ## Project Docs
 
@@ -35,15 +47,19 @@ npm run test
 - [Development Backlog](./docs/backlog.md)
 - [Application and Game Foundation](./docs/features/01-application-game-foundation.md)
 - [Basic Persisted Game Loop](./docs/features/02-basic-persisted-game-loop.md)
+- [Game Loop Performance Hardening](./docs/features/02-a-game-loop-performance.md)
+- [Play Against Computer and Early Analysis](./docs/features/03-computer-play-analysis.md)
 - [Planning Structure](./docs/planning-structure.md)
 - [Architecture Plan](./docs/architecture-plan.md)
 
 ## Current Implementation Slice
 
-Feature 01 provides the scaffold, domain package layout, authentication shell,
-Prisma schema, local user initialization, and game domain contracts. Feature 02
-is the active implementation slice for server-side game validation and the
-playable browser chessboard flow.
+Features 01 and 02 are complete. The application now provides authentication,
+the persisted game model, server-authoritative move validation, an interactive
+browser chessboard, SAN move history, game completion, and an authenticated
+Playwright persistence check. Feature 02-a is the active implementation slice
+for reducing authenticated request and move-persistence latency before Feature
+03 adds computer play and bounded position analysis.
 
 The current scaffold includes the initial product routes:
 
