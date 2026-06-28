@@ -43,14 +43,14 @@ Feature 02 is complete. It delivers the first playable, persisted, server-backed
 
 Detailed feature plan: [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
 
-Feature 02-a is the active performance gate before engine work.
+Feature 02-a is complete. It reduced routine user synchronization, compacted move persistence, and preserved immediate optimistic board feedback.
 
-- [ ] Measure current auth, game-read, and move-persistence latency.
-- [ ] Add a lightweight existing-user request path.
-- [ ] Remove redundant user writes and duplicate game reads.
-- [ ] Compact atomic move persistence and snapshot return.
-- [ ] Confirm immediate optimistic board feedback and rollback.
-- [ ] Record the remaining realtime latency requirements for blitz and bullet.
+- [x] Measure current auth, game-read, and move-persistence latency.
+- [x] Add a lightweight existing-user request path.
+- [x] Remove redundant user writes and duplicate game reads.
+- [x] Compact atomic move persistence and snapshot return.
+- [x] Confirm immediate optimistic board feedback and rollback.
+- [x] Record the remaining realtime latency requirements for blitz and bullet.
 
 ## Feature 03. Play Against Computer and Early Analysis
 
@@ -202,4 +202,4 @@ Detailed feature plan: [Feature 03. Play Against Computer and Early Analysis](./
 
 ## Next Task
 
-Start Stage 01 of Feature 02-a by measuring request phases and database-operation counts for warm game reads and move submissions.
+Start Stage 01 of Feature 03 by defining the reusable engine boundary and selecting the exact Stockfish runtime.

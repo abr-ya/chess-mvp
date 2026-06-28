@@ -2,6 +2,7 @@ import { DEFAULT_POSITION } from "chess.js";
 import { describe, expect, it } from "vitest";
 
 import {
+  GamePersistenceConflictError,
   GameService,
   type AppendStoredMoveInput,
   type CreateStoredGameInput,
@@ -99,6 +100,51 @@ describe("GameService", () => {
     ).rejects.toMatchObject({ code: "WRONG_SIDE" });
   });
 
+  it("rejects a move submitted by a non-participant", async () => {
+    const { service, gameId } = await createGame();
+
+    await expect(
+      service.submitMove(
+        {
+          gameId,
+          idempotencyKey: "move-1",
+          from: "e2",
+          to: "e4",
+        },
+        "another-user",
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("does not expose a duplicate move snapshot to a non-participant", async () => {
+    const { service, gameId } = await createGame();
+    const command = {
+      gameId,
+      idempotencyKey: "move-1",
+      from: "e2",
+      to: "e4",
+    };
+    await service.submitMove(command, "user-1");
+
+    await expect(
+      service.submitMove(command, "another-user"),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("returns a conflict when another command changes the position first", async () => {
+    const { repository, service, gameId } = await createGame();
+    repository.conflictOnAppend = true;
+
+    await expect(
+      service.submitMove({
+        gameId,
+        idempotencyKey: "move-1",
+        from: "e2",
+        to: "e4",
+      }),
+    ).rejects.toMatchObject({ code: "GAME_CONFLICT" });
+  });
+
   it("stores checkmate and rejects moves after completion", async () => {
     const { service, gameId } = await createGame();
 
@@ -188,6 +234,7 @@ async function createGame() {
 class MemoryGameRepository implements GameRepository {
   private game: GameSnapshot | null = null;
   readonly appendedMoves: AppendStoredMoveInput[] = [];
+  conflictOnAppend = false;
 
   constructor(private readonly replacementFen?: string) {}
 
@@ -219,19 +266,25 @@ class MemoryGameRepository implements GameRepository {
     return this.game?.id === gameId ? structuredClone(this.game) : null;
   }
 
-  async getGameByMoveKey(
+  async getGameForMove(
     gameId: string,
     idempotencyKey: string,
-  ): Promise<GameSnapshot | null> {
+  ) {
     const exists = this.appendedMoves.some(
       (move) =>
         move.gameId === gameId && move.idempotencyKey === idempotencyKey,
     );
 
-    return exists ? this.getGame(gameId) : null;
+    const game = await this.getGame(gameId);
+
+    return game ? { game, isDuplicate: exists } : null;
   }
 
-  async appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot> {
+  async appendMove(input: AppendStoredMoveInput) {
+    if (this.conflictOnAppend) {
+      throw new GamePersistenceConflictError();
+    }
+
     if (!this.game || this.game.currentFen !== input.expectedFen) {
       throw new Error("Game state conflict.");
     }
@@ -260,10 +313,10 @@ class MemoryGameRepository implements GameRepository {
       terminationReason: input.terminationReason,
       completedAt: input.completedAt,
       moves: [...this.game.moves, move],
-      updatedAt: new Date(),
+      updatedAt: input.persistedAt,
     };
 
-    return structuredClone(this.game);
+    return { id: move.id, createdAt: move.createdAt };
   }
 }
 

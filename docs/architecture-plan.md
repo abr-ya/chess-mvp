@@ -286,4 +286,4 @@ Still deferred:
 
 - Choose the exact Stockfish package, binary, or WASM strategy during Feature 03 engine implementation.
 
-Current implementation handoff lives in [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md). Continue to [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md) after the performance gate passes.
+Feature 02-a now provides a read-only existing-user request path, one authoritative move snapshot read, atomic concurrency-protected persistence, and an updated snapshot without a routine post-write reload. Current implementation handoff is [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md).

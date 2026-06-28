@@ -4,6 +4,7 @@ import { AuthProvider, GameMode } from "@/lib/generated/prisma/enums";
 
 import {
   ensureLocalUser,
+  findLocalUserByProviderId,
   STARTING_RATING,
   type LocalRatingRecord,
   type LocalUserDatabase,
@@ -204,5 +205,56 @@ describe("ensureLocalUser", () => {
       userId: first.user.id,
       email: "new@example.com",
     });
+  });
+});
+
+describe("findLocalUserByProviderId", () => {
+  it("returns an existing user and rating without performing synchronization writes", async () => {
+    const lastSeenAt = new Date("2026-06-25T10:00:00.000Z");
+    const findUnique = async () => ({
+      user: {
+        id: "user-1",
+        email: "player@example.com",
+        displayName: "Player One",
+        avatarUrl: null,
+        lastSeenAt,
+        ratings: [
+          {
+            id: "rating-1",
+            userId: "user-1",
+            mode: GameMode.MANUAL,
+            value: 1200,
+          },
+        ],
+      },
+    });
+
+    const result = await findLocalUserByProviderId("clerk-user-1", {
+      userAuthIdentity: { findUnique },
+    });
+
+    expect(result).toEqual({
+      user: {
+        id: "user-1",
+        email: "player@example.com",
+        displayName: "Player One",
+        avatarUrl: null,
+        lastSeenAt,
+      },
+      rating: {
+        id: "rating-1",
+        userId: "user-1",
+        mode: GameMode.MANUAL,
+        value: 1200,
+      },
+    });
+  });
+
+  it("returns null when the identity or default rating is missing", async () => {
+    const result = await findLocalUserByProviderId("new-clerk-user", {
+      userAuthIdentity: { findUnique: async () => null },
+    });
+
+    expect(result).toBeNull();
   });
 });

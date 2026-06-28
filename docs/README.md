@@ -21,7 +21,7 @@ Initial product documentation for the chess platform MVP.
 - [Feature 02. Basic Persisted Game Loop](./features/02-basic-persisted-game-loop.md)
   Completed first playable persisted game loop.
 - [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
-  Active performance gate for the authenticated game request path.
+  Completed hardening for the authenticated game request path.
 - [Feature 03. Play Against Computer and Early Analysis](./features/03-computer-play-analysis.md)
   Next executable plan for computer play and bounded position analysis.
 
@@ -35,4 +35,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 01 of Feature 02-a by measuring request phases and database-operation counts for warm game reads and move submissions.
+Start Stage 01 of Feature 03 by defining the reusable engine boundary and selecting the exact Stockfish runtime.

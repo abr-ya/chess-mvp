@@ -73,7 +73,7 @@ describe("GameApi", () => {
       idempotencyKey: "client-move-1",
       from: "e2",
       to: "e4",
-    });
+    }, "user-1");
   });
 
   it("returns a UI-friendly validation error for malformed moves", async () => {

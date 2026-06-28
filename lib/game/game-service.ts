@@ -1,4 +1,5 @@
 import { Chess, DEFAULT_POSITION, type Color, type Square } from "chess.js";
+import type { PerformanceTrace } from "@/lib/observability/request-performance";
 
 import type {
   CreateGameInput,
@@ -31,16 +32,27 @@ export type AppendStoredMoveInput = {
   result: GameResult;
   terminationReason: TerminationReason;
   completedAt: Date | null;
+  persistedAt: Date;
+};
+
+export type PersistedMoveResult = {
+  id: string;
+  createdAt: Date;
+};
+
+export type GameForMove = {
+  game: GameSnapshot;
+  isDuplicate: boolean;
 };
 
 export interface GameRepository {
   createGame(input: CreateStoredGameInput): Promise<GameSnapshot>;
   getGame(gameId: string): Promise<GameSnapshot | null>;
-  getGameByMoveKey(
+  getGameForMove(
     gameId: string,
     idempotencyKey: string,
-  ): Promise<GameSnapshot | null>;
-  appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot>;
+  ): Promise<GameForMove | null>;
+  appendMove(input: AppendStoredMoveInput): Promise<PersistedMoveResult>;
 }
 
 export type GameServiceErrorCode =
@@ -48,7 +60,9 @@ export type GameServiceErrorCode =
   | "GAME_FINISHED"
   | "INVALID_MOVE"
   | "WRONG_SIDE"
-  | "INVALID_GAME_INPUT";
+  | "INVALID_GAME_INPUT"
+  | "FORBIDDEN"
+  | "GAME_CONFLICT";
 
 export class GameServiceError extends Error {
   constructor(
@@ -60,8 +74,18 @@ export class GameServiceError extends Error {
   }
 }
 
+export class GamePersistenceConflictError extends Error {
+  constructor() {
+    super("The game changed before the move could be persisted.");
+    this.name = "GamePersistenceConflictError";
+  }
+}
+
 export class GameService {
-  constructor(private readonly repository: GameRepository) {}
+  constructor(
+    private readonly repository: GameRepository,
+    private readonly trace?: PerformanceTrace,
+  ) {}
 
   async createGame(input: CreateGameInput): Promise<GameSnapshot> {
     if (
@@ -81,7 +105,10 @@ export class GameService {
   }
 
   async getGameSnapshot(gameId: string): Promise<GameSnapshot> {
-    const snapshot = await this.repository.getGame(gameId);
+    const loadGame = () => this.repository.getGame(gameId);
+    const snapshot = this.trace
+      ? await this.trace.measure("game-loading", loadGame)
+      : await loadGame();
 
     if (!snapshot) {
       throw new GameServiceError("GAME_NOT_FOUND", "Game not found.");
@@ -90,17 +117,37 @@ export class GameService {
     return snapshot;
   }
 
-  async submitMove(command: MoveCommand): Promise<GameSnapshot> {
-    const existingResult = await this.repository.getGameByMoveKey(
-      command.gameId,
-      command.idempotencyKey,
-    );
+  async submitMove(
+    command: MoveCommand,
+    requestingUserId?: string,
+  ): Promise<GameSnapshot> {
+    const loadGame = () =>
+      this.repository.getGameForMove(command.gameId, command.idempotencyKey);
+    const gameForMove = this.trace
+      ? await this.trace.measure("game-loading", loadGame)
+      : await loadGame();
 
-    if (existingResult) {
-      return existingResult;
+    if (!gameForMove) {
+      throw new GameServiceError("GAME_NOT_FOUND", "Game not found.");
     }
 
-    const snapshot = await this.getGameSnapshot(command.gameId);
+    const { game: snapshot, isDuplicate } = gameForMove;
+
+    if (
+      requestingUserId &&
+      !snapshot.participants.some(
+        (participant) => participant.userId === requestingUserId,
+      )
+    ) {
+      throw new GameServiceError(
+        "FORBIDDEN",
+        "You are not a participant in this game.",
+      );
+    }
+
+    if (isDuplicate) {
+      return snapshot;
+    }
 
     if (snapshot.status === "completed" || snapshot.status === "aborted") {
       throw new GameServiceError(
@@ -109,45 +156,52 @@ export class GameService {
       );
     }
 
-    const chess = new Chess(snapshot.currentFen);
-    const side = colorToSide(chess.turn());
-    const participant = snapshot.participants.find(
-      (candidate) => candidate.side === side,
-    );
-
-    if (!participant) {
-      throw new GameServiceError(
-        "INVALID_GAME_INPUT",
-        `The game has no ${side} participant.`,
+    const validatedMove = () => {
+      const chess = new Chess(snapshot.currentFen);
+      const side = colorToSide(chess.turn());
+      const participant = snapshot.participants.find(
+        (candidate) => candidate.side === side,
       );
-    }
 
-    const sourcePiece = isSquare(command.from)
-      ? chess.get(command.from as Square)
-      : undefined;
+      if (!participant) {
+        throw new GameServiceError(
+          "INVALID_GAME_INPUT",
+          `The game has no ${side} participant.`,
+        );
+      }
 
-    if (sourcePiece && sourcePiece.color !== chess.turn()) {
-      throw new GameServiceError(
-        "WRONG_SIDE",
-        `It is ${side}'s turn to move.`,
-      );
-    }
+      const sourcePiece = isSquare(command.from)
+        ? chess.get(command.from as Square)
+        : undefined;
 
-    let move: ReturnType<Chess["move"]>;
+      if (sourcePiece && sourcePiece.color !== chess.turn()) {
+        throw new GameServiceError(
+          "WRONG_SIDE",
+          `It is ${side}'s turn to move.`,
+        );
+      }
 
-    try {
-      move = chess.move({
-        from: command.from,
-        to: command.to,
-        promotion: command.promotion,
-      });
-    } catch {
-      throw new GameServiceError("INVALID_MOVE", "The move is not legal.");
-    }
+      let move: ReturnType<Chess["move"]>;
 
+      try {
+        move = chess.move({
+          from: command.from,
+          to: command.to,
+          promotion: command.promotion,
+        });
+      } catch {
+        throw new GameServiceError("INVALID_MOVE", "The move is not legal.");
+      }
+
+      return { chess, side, participant, move };
+    };
+    const { chess, side, participant, move } = this.trace
+      ? this.trace.measureSync("rule-validation", validatedMove)
+      : validatedMove();
     const completion = getCompletion(chess, side);
 
-    return this.repository.appendMove({
+    const persistedAt = new Date();
+    const persistMove = () => this.repository.appendMove({
       gameId: command.gameId,
       expectedFen: snapshot.currentFen,
       idempotencyKey: command.idempotencyKey,
@@ -161,7 +215,70 @@ export class GameService {
       san: move.san,
       fenAfter: chess.fen(),
       ...completion,
+      persistedAt,
     });
+
+    const persistedMove = this.trace
+      ? this.trace.measure("move-persistence", persistMove)
+      : persistMove();
+    let storedMove: PersistedMoveResult;
+
+    try {
+      storedMove = await persistedMove;
+    } catch (error) {
+      if (!(error instanceof GamePersistenceConflictError)) {
+        throw error;
+      }
+
+      const recovered = await this.repository.getGameForMove(
+        command.gameId,
+        command.idempotencyKey,
+      );
+
+      if (recovered?.isDuplicate) {
+        return recovered.game;
+      }
+
+      throw new GameServiceError(
+        "GAME_CONFLICT",
+        "The game changed before the move could be persisted. Reload and try again.",
+      );
+    }
+
+    return {
+      ...snapshot,
+      currentFen: chess.fen(),
+      sideToMove: side === "white" ? "black" : "white",
+      status: completion.status,
+      result: completion.result,
+      terminationReason: completion.terminationReason,
+      completedAt: completion.completedAt,
+      updatedAt: persistedAt,
+      participants:
+        completion.status === "completed"
+          ? snapshot.participants.map((item) => ({
+              ...item,
+              result: completion.result,
+            }))
+          : snapshot.participants,
+      moves: [
+        ...snapshot.moves,
+        {
+          id: storedMove.id,
+          participantId: participant.id,
+          moveNumber: snapshot.moves.length + 1,
+          side,
+          from: move.from,
+          to: move.to,
+          promotion: toPromotionPiece(move.promotion),
+          uci: `${move.from}${move.to}${move.promotion ?? ""}`,
+          san: move.san,
+          fenAfter: chess.fen(),
+          clockMsAfter: null,
+          createdAt: storedMove.createdAt,
+        },
+      ],
+    };
   }
 }
 

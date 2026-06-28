@@ -6,10 +6,12 @@ import {
   TerminationReason,
 } from "@/lib/generated/prisma/enums";
 import { prisma } from "@/lib/persistence/prisma";
+import type { PerformanceTrace } from "@/lib/observability/request-performance";
 
 import {
   type AppendStoredMoveInput,
   type CreateStoredGameInput,
+  GamePersistenceConflictError,
   type GameRepository,
 } from "./game-service";
 import { mapGameSnapshotRecord } from "./mappers";
@@ -21,8 +23,10 @@ const gameSnapshotInclude = {
 } as const;
 
 export class PrismaGameRepository implements GameRepository {
+  constructor(private readonly trace?: PerformanceTrace) {}
+
   async createGame(input: CreateStoredGameInput): Promise<GameSnapshot> {
-    const record = await prisma.game.create({
+    const record = await this.database("game.create", () => prisma.game.create({
       data: {
         mode: GameMode.MANUAL,
         status: GameStatus.ACTIVE,
@@ -47,40 +51,44 @@ export class PrismaGameRepository implements GameRepository {
         },
       },
       include: gameSnapshotInclude,
-    });
+    }));
 
     return mapGameSnapshotRecord(record);
   }
 
   async getGame(gameId: string): Promise<GameSnapshot | null> {
-    const record = await prisma.game.findUnique({
+    const record = await this.database("game.findUnique", () => prisma.game.findUnique({
       where: { id: gameId },
       include: gameSnapshotInclude,
-    });
+    }));
 
     return record ? mapGameSnapshotRecord(record) : null;
   }
 
-  async getGameByMoveKey(
+  async getGameForMove(
     gameId: string,
     idempotencyKey: string,
-  ): Promise<GameSnapshot | null> {
-    const move = await prisma.move.findUnique({
-      where: {
-        gameId_idempotencyKey: {
-          gameId,
-          idempotencyKey,
-        },
-      },
-      select: { gameId: true },
-    });
+  ) {
+    const record = await this.database("game.findUnique.forMove", () =>
+      prisma.game.findUnique({
+        where: { id: gameId },
+        include: gameSnapshotInclude,
+      }),
+    );
 
-    return move ? this.getGame(move.gameId) : null;
+    return record
+      ? {
+          game: mapGameSnapshotRecord(record),
+          isDuplicate: record.moves.some(
+            (move) => move.idempotencyKey === idempotencyKey,
+          ),
+        }
+      : null;
   }
 
-  async appendMove(input: AppendStoredMoveInput): Promise<GameSnapshot> {
-    return prisma.$transaction(async (tx) => {
-      const gameUpdate = await tx.game.updateMany({
+  async appendMove(input: AppendStoredMoveInput) {
+    return this.database("transaction", () => prisma.$transaction(async (tx) => {
+      const gameUpdate = await this.database("game.updateMany", () => tx.game.updateMany({
         where: {
           id: input.gameId,
           currentFen: input.expectedFen,
@@ -92,16 +100,15 @@ export class PrismaGameRepository implements GameRepository {
           result: toGameResult(input.result),
           terminationReason: toTerminationReason(input.terminationReason),
           completedAt: input.completedAt,
+          updatedAt: input.persistedAt,
         },
-      });
+      }));
 
       if (gameUpdate.count !== 1) {
-        throw new Error(
-          "The game changed before the move could be persisted. Reload and try again.",
-        );
+        throw new GamePersistenceConflictError();
       }
 
-      await tx.move.create({
+      const move = await this.database("move.create", () => tx.move.create({
         data: {
           gameId: input.gameId,
           participantId: input.participantId,
@@ -115,22 +122,21 @@ export class PrismaGameRepository implements GameRepository {
           san: input.san,
           fenAfter: input.fenAfter,
         },
-      });
+      }));
 
       if (input.status === "completed") {
-        await tx.gameParticipant.updateMany({
+        await this.database("gameParticipant.updateMany", () => tx.gameParticipant.updateMany({
           where: { gameId: input.gameId },
           data: { result: toGameResult(input.result) },
-        });
+        }));
       }
 
-      const record = await tx.game.findUniqueOrThrow({
-        where: { id: input.gameId },
-        include: gameSnapshotInclude,
-      });
+      return { id: move.id, createdAt: move.createdAt };
+    }));
+  }
 
-      return mapGameSnapshotRecord(record);
-    });
+  private database<T>(operation: string, query: () => Promise<T>) {
+    return this.trace ? this.trace.database(operation, query) : query();
   }
 }
 
