@@ -23,10 +23,10 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Stage 02. Board Editor
 
-- [ ] Add a reusable `PositionSetupBoard` behind the local chessboard boundary.
-- [ ] Support placing, moving, replacing, and removing pieces.
-- [ ] Add piece palette, clear-board, and reset-to-start actions.
-- [ ] Keep desktop, mobile, mouse, and touch interactions usable.
+- [x] Add a reusable `PositionSetupBoard` behind the local chessboard boundary.
+- [x] Support placing, moving, replacing, and removing pieces.
+- [x] Add piece palette, clear-board, and reset-to-start actions.
+- [x] Keep desktop, mobile, mouse, and touch interactions usable.
 
 ## Stage 03. Position Controls and FEN
 
@@ -52,4 +52,4 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Next Task
 
-Start Stage 02 by adding the reusable `PositionSetupBoard`, piece palette, and clear/reset interactions.
+Start Stage 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.

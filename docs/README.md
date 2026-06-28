@@ -41,4 +41,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 02 of Feature 03 by adding the reusable position setup board, piece palette, and clear/reset interactions.
+Start Stage 03 of Feature 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.

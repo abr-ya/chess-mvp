@@ -221,4 +221,4 @@ Detailed feature plan: [Feature 06. Play Against Computer](./features/06-play-ag
 
 ## Next Task
 
-Start Stage 02 of Feature 03 by adding the reusable position setup board, piece palette, and clear/reset interactions.
+Start Stage 03 of Feature 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.

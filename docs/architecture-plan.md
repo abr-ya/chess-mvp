@@ -58,6 +58,10 @@ The chess-specific dependencies should stay isolated behind local application in
 - The React chessboard package is a view dependency only. It must be wrapped by `ChessboardView`, which receives FEN, orientation, legal UI hints, and move callbacks. Pages and services should not depend directly on the package API.
 - Stockfish is the engine dependency. It must be wrapped by `EngineService`, which can support both engine moves and position analysis.
 
+Custom position setup uses a local `EditablePosition` domain model rather than chessboard-package state. It owns piece placement, side to move, castling rights, en passant state, move counters, FEN conversion, and validation. The position editor may use the chessboard wrapper as a view, but the model must remain reusable by PGN, engine, computer-play, and future puzzle features.
+
+PGN is a complete-game interchange format, not a position-editor format. Import must validate and reconstruct structured game, move, SAN, UCI, and FEN records; export must be generated from those structured records. FEN setup and PGN file transfer therefore remain separate feature and service boundaries.
+
 The browser chessboard package decision is recorded in [Chessboard Package Decision](./decisions/chessboard-package.md). The exact Stockfish package, binary, or WASM strategy should be selected during engine implementation.
 
 ## Service Architecture
@@ -83,7 +87,7 @@ Realtime Server
   v
 PostgreSQL
   |
-  | EngineService for computer games
+  | EngineService for bounded evaluation and computer games
   v
 Stockfish Adapter
 ```
@@ -138,14 +142,33 @@ Responsible for:
 - returning a best line or principal variation when available;
 - failing gracefully without corrupting game state.
 
+### Position Domain
+
+Responsible for:
+
+- representing editable piece placement independently of UI libraries;
+- parsing and serializing complete FEN state;
+- validating king count, pawn placement, side to move, castling rights, en passant state, and move counters;
+- handing a validated FEN to later engine, computer-play, and puzzle workflows.
+
+An empty or partially constructed board may exist as editor state, but it must not be accepted as a playable or analyzable position until validation succeeds.
+
+### PGN Service
+
+Responsible for:
+
+- generating PGN from structured persisted games;
+- validating uploaded or pasted PGN;
+- reconstructing structured moves and positions during import;
+- enforcing file-size, atomic-persistence, access, and idempotency rules.
+
 ### Analysis Service
 
-Early analysis should reuse `EngineService` instead of creating a second engine integration. The first approximation should support:
+Position construction belongs to the Position Domain and Feature 03. Feature 05 analysis should consume a validated FEN and reuse `EngineService` instead of creating a second engine integration. Its first approximation should support:
 
-- entering or importing a FEN position;
-- validating the position with `chess.js`;
 - asking Stockfish for a bounded evaluation;
-- showing side-to-move, centipawn or mate score, and the top suggested line.
+- showing side-to-move, centipawn or mate score, and the best move or top suggested line;
+- rejecting stale results when the user changes the position during calculation.
 
 Full game analysis can build on the same service later by analyzing each stored move and saving an analysis job separately from the game.
 
@@ -157,9 +180,11 @@ The first working increment should prove the complete single-player loop before 
 2. Add Prisma and the initial PostgreSQL schema for users, games, participants, moves, and ratings.
 3. Implement the `GameService` with `chess.js` and unit tests.
 4. Build a local game screen with a chessboard, clocks, move list, and game status.
-5. Add a minimal engine adapter that can return a legal move for a selected level.
-6. Add a minimal position analysis screen that accepts a FEN, validates it, and returns a bounded Stockfish evaluation.
-7. Persist completed computer games and show them in a basic history page.
+5. Add custom position setup with a visual editor and validated FEN round-trip.
+6. Add PGN file import and export while preserving structured game records.
+7. Add a minimal `EngineService` that evaluates one validated position and returns a score and best move.
+8. Reuse `EngineService` for legal, persisted computer replies.
+9. Persist completed computer games and show them in a basic history page.
 
 Human invite games and Socket.IO synchronization should be the second implementation increment, after the server-side game model is already reliable.
 
@@ -212,7 +237,7 @@ GET /api/games/:id/pgn
 
 Feature 02 uses App Router Route Handlers for this HTTP boundary. Route files stay thin and delegate authentication, authorization, validation, and game behavior to the testable `GameApi` and `GameService` layers.
 
-Feature 02-a hardens this boundary before engine work: routine requests should resolve existing internal users without repeated profile/rating writes, move submission should avoid duplicate snapshot reads, and the client should display legal local moves optimistically while the server remains authoritative. Socket.IO, server clocks, and premoves remain separate requirements for later blitz and bullet play.
+Feature 02-a hardens this boundary before later product work: routine page and game-creation requests use a read-only existing-user fast path, while move submission reads the Clerk session user ID and verifies participant identity inside the authoritative game lookup instead of performing a separate internal-user query. The move path avoids duplicate snapshot reads, returns the updated snapshot without a post-write reload, and displays legal local moves optimistically while the server remains authoritative. Socket.IO, server clocks, and premoves remain separate requirements for later blitz and bullet play.
 
 ### Socket.IO Events
 
@@ -286,4 +311,4 @@ Still deferred:
 
 - Choose the exact Stockfish package, binary, or WASM strategy during Feature 05 engine implementation.
 
-Feature 02-a now provides a read-only existing-user request path, one authoritative move snapshot read, atomic concurrency-protected persistence, and an updated snapshot without a routine post-write reload. Current implementation handoff is [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md). PGN file transfer, engine evaluation, and computer play follow as separate Features 04, 05, and 06.
+Feature 02-a now provides a read-only existing-user path for operations that need the internal user and a compact move path that merges participant authorization into the authoritative game lookup. Move persistence remains atomic and concurrency-protected and returns an updated snapshot without a routine post-write reload. Current implementation handoff is [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md). Its domain model is intentionally independent of the board UI and Stockfish. PGN file transfer, engine evaluation, and computer play follow as separate Features 04, 05, and 06.

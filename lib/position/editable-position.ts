@@ -79,6 +79,47 @@ export function createInitialPosition(): EditablePosition {
   return result.position;
 }
 
+export function isPositionSquare(value: string): value is PositionSquare {
+  return /^[a-h][1-8]$/.test(value);
+}
+
+export function setPositionPiece(
+  position: EditablePosition,
+  square: PositionSquare,
+  piece: PositionPiece | null,
+): EditablePosition {
+  const pieces = { ...position.pieces };
+
+  if (piece) {
+    pieces[square] = piece;
+  } else {
+    delete pieces[square];
+  }
+
+  return { ...position, pieces };
+}
+
+export function movePositionPiece(
+  position: EditablePosition,
+  source: PositionSquare,
+  target: PositionSquare | null,
+): EditablePosition {
+  const piece = position.pieces[source];
+
+  if (!piece) {
+    return position;
+  }
+
+  const pieces = { ...position.pieces };
+  delete pieces[source];
+
+  if (target) {
+    pieces[target] = piece;
+  }
+
+  return { ...position, pieces };
+}
+
 export function parseFen(fen: string): FenParseResult {
   const normalizedFen = fen.trim();
   const libraryValidation = validateFen(normalizedFen);

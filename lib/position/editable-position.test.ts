@@ -4,7 +4,9 @@ import { describe, expect, it } from "vitest";
 import {
   createEmptyPosition,
   createInitialPosition,
+  movePositionPiece,
   parseFen,
+  setPositionPiece,
   toFen,
   validateEditablePosition,
 } from "./editable-position";
@@ -39,6 +41,37 @@ describe("editable position FEN conversion", () => {
         { code: "KING_COUNT" },
       ],
     });
+  });
+});
+
+describe("editable position changes", () => {
+  it("places, replaces, and removes a piece without mutating the input", () => {
+    const initial = createEmptyPosition();
+    const placed = setPositionPiece(initial, "e4", {
+      color: "white",
+      type: "queen",
+    });
+    const replaced = setPositionPiece(placed, "e4", {
+      color: "black",
+      type: "knight",
+    });
+    const removed = setPositionPiece(replaced, "e4", null);
+
+    expect(initial.pieces.e4).toBeUndefined();
+    expect(placed.pieces.e4).toEqual({ color: "white", type: "queen" });
+    expect(replaced.pieces.e4).toEqual({ color: "black", type: "knight" });
+    expect(removed.pieces.e4).toBeUndefined();
+  });
+
+  it("moves a piece, replaces the target, and supports drag-off removal", () => {
+    const initial = createInitialPosition();
+    const moved = movePositionPiece(initial, "a1", "a8");
+    const removed = movePositionPiece(moved, "a8", null);
+
+    expect(initial.pieces.a1).toEqual({ color: "white", type: "rook" });
+    expect(moved.pieces.a1).toBeUndefined();
+    expect(moved.pieces.a8).toEqual({ color: "white", type: "rook" });
+    expect(removed.pieces.a8).toBeUndefined();
   });
 });
 
