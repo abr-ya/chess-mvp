@@ -54,12 +54,11 @@ npm run test:e2e
 
 ## Current Implementation Slice
 
-Features 01 and 02 are complete. The application now provides authentication,
+Features 01, 02, and 02-a are complete. The application now provides authentication,
 the persisted game model, server-authoritative move validation, an interactive
 browser chessboard, SAN move history, game completion, and an authenticated
-Playwright persistence check. Feature 02-a is the active implementation slice
-for reducing authenticated request and move-persistence latency before Feature
-03 adds computer play and bounded position analysis.
+Playwright persistence check, optimistic local moves, lightweight request identity,
+and compact atomic move persistence. Feature 03 is the next implementation slice.
 
 The current scaffold includes the initial product routes:
 

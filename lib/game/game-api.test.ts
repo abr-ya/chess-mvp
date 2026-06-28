@@ -68,12 +68,15 @@ describe("GameApi", () => {
     });
 
     expect(result).toEqual({ ok: true, game: ownedGame });
-    expect(gameService.submitMove).toHaveBeenCalledWith({
-      gameId: "game-1",
-      idempotencyKey: "client-move-1",
-      from: "e2",
-      to: "e4",
-    });
+    expect(gameService.submitMove).toHaveBeenCalledWith(
+      {
+        gameId: "game-1",
+        idempotencyKey: "client-move-1",
+        from: "e2",
+        to: "e4",
+      },
+      "clerk-user-1",
+    );
   });
 
   it("returns a UI-friendly validation error for malformed moves", async () => {
@@ -124,6 +127,7 @@ function createApi(
     options.localUser === undefined ? currentLocalUser : options.localUser;
   const api = new GameApi({
     ensureCurrentLocalUser: vi.fn().mockResolvedValue(localUser),
+    getCurrentProviderUserId: vi.fn().mockResolvedValue("clerk-user-1"),
     gameService,
   });
 

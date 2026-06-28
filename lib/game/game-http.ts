@@ -1,4 +1,5 @@
 import type { GameApiResult } from "./game-api";
+import type { PerformanceTrace } from "@/lib/observability/request-performance";
 
 export function gameApiResponse(result: GameApiResult): Response {
   if (result.ok) {
@@ -10,6 +11,7 @@ export function gameApiResponse(result: GameApiResult): Response {
 
 export async function gameRouteResponse(
   operation: () => Promise<GameApiResult>,
+  trace?: PerformanceTrace,
 ): Promise<Response> {
   try {
     return gameApiResponse(await operation());
@@ -25,6 +27,8 @@ export async function gameRouteResponse(
       },
       { status: 500 },
     );
+  } finally {
+    trace?.finish();
   }
 }
 

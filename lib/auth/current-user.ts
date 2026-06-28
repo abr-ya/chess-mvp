@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export type CurrentUserIdentity = {
   provider: "clerk";
@@ -7,6 +7,12 @@ export type CurrentUserIdentity = {
   displayName: string | null;
   avatarUrl: string | null;
 };
+
+export async function getCurrentProviderUserId(): Promise<string | null> {
+  const session = await auth();
+
+  return session.userId;
+}
 
 export async function getCurrentUserIdentity(): Promise<CurrentUserIdentity | null> {
   const user = await currentUser();

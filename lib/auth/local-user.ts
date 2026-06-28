@@ -1,6 +1,11 @@
 import { AuthProvider, GameMode } from "@/lib/generated/prisma/enums";
+import type { PerformanceTrace } from "@/lib/observability/request-performance";
 
-import { getCurrentUserIdentity, type CurrentUserIdentity } from "./current-user";
+import {
+  getCurrentProviderUserId,
+  getCurrentUserIdentity,
+  type CurrentUserIdentity,
+} from "./current-user";
 
 export const STARTING_RATING = 1200;
 
@@ -100,8 +105,120 @@ export type LocalUserDatabase = {
   $transaction<T>(callback: (tx: LocalUserTransaction) => Promise<T>): Promise<T>;
 };
 
+export type LocalUserRequestDatabase = {
+  userAuthIdentity: {
+    findUnique(args: {
+      where: {
+        provider_providerUserId: {
+          provider: AuthProvider;
+          providerUserId: string;
+        };
+      };
+      select: {
+        user: {
+          select: {
+            id: true;
+            email: true;
+            displayName: true;
+            avatarUrl: true;
+            lastSeenAt: true;
+            ratings: {
+              where: { mode: GameMode };
+              take: 1;
+              select: {
+                id: true;
+                userId: true;
+                mode: true;
+                value: true;
+              };
+            };
+          };
+        };
+      };
+    }): Promise<{ user: LocalUserRecord & { ratings: LocalRatingRecord[] } } | null>;
+  };
+};
+
+export async function resolveCurrentLocalUser(
+  db?: LocalUserRequestDatabase & LocalUserDatabase,
+  trace?: PerformanceTrace,
+): Promise<EnsureLocalUserResult | null> {
+  const providerUserId = await getCurrentProviderUserId();
+
+  if (!providerUserId) {
+    return null;
+  }
+
+  const databaseClient = db ?? (await import("@/lib/persistence/prisma")).prisma;
+  const existing = await findLocalUserByProviderId(
+    providerUserId,
+    databaseClient,
+    trace,
+  );
+
+  if (existing) {
+    return existing;
+  }
+
+  return ensureCurrentLocalUser(databaseClient, trace);
+}
+
+export async function findLocalUserByProviderId(
+  providerUserId: string,
+  db: LocalUserRequestDatabase,
+  trace?: PerformanceTrace,
+): Promise<EnsureLocalUserResult | null> {
+  const identity = await database(trace, "userAuthIdentity.findUnique.fast", () =>
+    db.userAuthIdentity.findUnique({
+      where: {
+        provider_providerUserId: {
+          provider: AuthProvider.CLERK,
+          providerUserId,
+        },
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            displayName: true,
+            avatarUrl: true,
+            lastSeenAt: true,
+            ratings: {
+              where: { mode: GameMode.MANUAL },
+              take: 1,
+              select: {
+                id: true,
+                userId: true,
+                mode: true,
+                value: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+  );
+  const rating = identity?.user.ratings[0];
+
+  if (!identity || !rating) {
+    return null;
+  }
+
+  const user: LocalUserRecord = {
+    id: identity.user.id,
+    email: identity.user.email,
+    displayName: identity.user.displayName,
+    avatarUrl: identity.user.avatarUrl,
+    lastSeenAt: identity.user.lastSeenAt,
+  };
+
+  return { user, rating };
+}
+
 export async function ensureCurrentLocalUser(
   db?: LocalUserDatabase,
+  trace?: PerformanceTrace,
 ): Promise<EnsureLocalUserResult | null> {
   const identity = await getCurrentUserIdentity();
 
@@ -110,31 +227,31 @@ export async function ensureCurrentLocalUser(
   }
 
   if (db) {
-    return ensureLocalUser(identity, db);
+    return ensureLocalUser(identity, db, { trace });
   }
 
   const { prisma } = await import("@/lib/persistence/prisma");
 
-  return ensureLocalUser(identity, prisma);
+  return ensureLocalUser(identity, prisma, { trace });
 }
 
 export async function ensureLocalUser(
   identity: CurrentUserIdentity,
   db: LocalUserDatabase,
-  options: { now?: Date } = {},
+  options: { now?: Date; trace?: PerformanceTrace } = {},
 ): Promise<EnsureLocalUserResult> {
   const provider = toAuthProvider(identity.provider);
   const lastSeenAt = options.now ?? new Date();
 
-  return db.$transaction(async (tx) => {
-    const existingIdentity = await tx.userAuthIdentity.findUnique({
+  return database(options.trace, "user-sync.transaction", () => db.$transaction(async (tx) => {
+    const existingIdentity = await database(options.trace, "userAuthIdentity.findUnique", () => tx.userAuthIdentity.findUnique({
       where: {
         provider_providerUserId: {
           provider,
           providerUserId: identity.providerUserId,
         },
       },
-    });
+    }));
 
     const userData = {
       email: identity.email,
@@ -144,17 +261,17 @@ export async function ensureLocalUser(
     };
 
     const user = existingIdentity
-      ? await tx.user.update({
+      ? await database(options.trace, "user.update", () => tx.user.update({
           where: {
             id: existingIdentity.userId,
           },
           data: userData,
-        })
-      : await tx.user.create({
+        }))
+      : await database(options.trace, "user.create", () => tx.user.create({
           data: userData,
-        });
+        }));
 
-    await tx.userAuthIdentity.upsert({
+    await database(options.trace, "userAuthIdentity.upsert", () => tx.userAuthIdentity.upsert({
       where: {
         provider_providerUserId: {
           provider,
@@ -171,9 +288,9 @@ export async function ensureLocalUser(
         providerUserId: identity.providerUserId,
         email: identity.email,
       },
-    });
+    }));
 
-    const rating = await tx.rating.upsert({
+    const rating = await database(options.trace, "rating.upsert", () => tx.rating.upsert({
       where: {
         userId_mode: {
           userId: user.id,
@@ -186,13 +303,21 @@ export async function ensureLocalUser(
         mode: GameMode.MANUAL,
         value: STARTING_RATING,
       },
-    });
+    }));
 
     return {
       user,
       rating,
     };
-  });
+  }));
+}
+
+function database<T>(
+  trace: PerformanceTrace | undefined,
+  operation: string,
+  query: () => Promise<T>,
+) {
+  return trace ? trace.database(operation, query) : query();
 }
 
 function toAuthProvider(provider: CurrentUserIdentity["provider"]): AuthProvider {

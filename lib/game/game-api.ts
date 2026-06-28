@@ -1,4 +1,5 @@
 import type { EnsureLocalUserResult } from "@/lib/auth/local-user";
+import type { PerformanceTrace } from "@/lib/observability/request-performance";
 
 import {
   GameService,
@@ -24,10 +25,12 @@ export type GameApiResult =
 
 export type GameApiDependencies = {
   ensureCurrentLocalUser(): Promise<EnsureLocalUserResult | null>;
+  getCurrentProviderUserId(): Promise<string | null>;
   gameService: Pick<
     GameService,
     "createGame" | "getGameSnapshot" | "submitMove"
   >;
+  trace?: PerformanceTrace;
 };
 
 export class GameApi {
@@ -61,10 +64,10 @@ export class GameApi {
   }
 
   async submitMove(gameId: string, body: unknown): Promise<GameApiResult> {
-    const access = await this.requireGameAccess(gameId);
+    const providerUserId = await this.dependencies.getCurrentProviderUserId();
 
-    if (!access.ok) {
-      return access.result;
+    if (!providerUserId) {
+      return apiError(401, "UNAUTHENTICATED", "Sign in to continue.");
     }
 
     const command = parseMoveCommand(gameId, body);
@@ -78,7 +81,10 @@ export class GameApi {
     }
 
     return this.runGameOperation(() =>
-      this.dependencies.gameService.submitMove(command),
+      this.dependencies.gameService.submitMove(
+        command,
+        providerUserId,
+      ),
     );
   }
 
@@ -120,7 +126,13 @@ export class GameApi {
   }
 
   private async requireUser() {
-    const localUser = await this.dependencies.ensureCurrentLocalUser();
+    const resolveUser = () => this.dependencies.ensureCurrentLocalUser();
+    const localUser = this.dependencies.trace
+      ? await this.dependencies.trace.measure(
+          "current-user-resolution",
+          resolveUser,
+        )
+      : await resolveUser();
 
     if (!localUser) {
       return {
@@ -155,16 +167,25 @@ export class GameApi {
   }
 }
 
-export async function createRuntimeGameApi(): Promise<GameApi> {
-  const [{ ensureCurrentLocalUser }, { PrismaGameRepository }] =
+export async function createRuntimeGameApi(
+  trace?: PerformanceTrace,
+): Promise<GameApi> {
+  const [
+    { getCurrentProviderUserId },
+    { resolveCurrentLocalUser },
+    { PrismaGameRepository },
+  ] =
     await Promise.all([
+      import("@/lib/auth/current-user"),
       import("@/lib/auth/local-user"),
       import("./prisma-game-repository"),
     ]);
 
   return new GameApi({
-    ensureCurrentLocalUser,
-    gameService: new GameService(new PrismaGameRepository()),
+    ensureCurrentLocalUser: () => resolveCurrentLocalUser(undefined, trace),
+    getCurrentProviderUserId,
+    gameService: new GameService(new PrismaGameRepository(trace), trace),
+    trace,
   });
 }
 
@@ -198,7 +219,10 @@ function gameServiceError(error: GameServiceError): GameApiResult {
     case "GAME_NOT_FOUND":
       return apiError(404, error.code, error.message);
     case "GAME_FINISHED":
+    case "GAME_CONFLICT":
       return apiError(409, error.code, error.message);
+    case "FORBIDDEN":
+      return apiError(403, error.code, error.message);
     case "INVALID_MOVE":
     case "WRONG_SIDE":
     case "INVALID_GAME_INPUT":

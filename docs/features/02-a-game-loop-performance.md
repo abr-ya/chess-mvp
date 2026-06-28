@@ -29,57 +29,70 @@ This feature does not implement Socket.IO, opponent synchronization, clocks, pre
 
 ## Stage 01. Measurement and Request Tracing
 
-- [ ] Add development-only timing around current-user resolution, game loading, rule validation, and persistence.
-- [ ] Record the baseline number of database operations for GET game and POST move.
-- [ ] Separate Next.js compilation time from application-code time.
-- [ ] Capture warm request timings against the configured PostgreSQL database.
-- [ ] Keep logs free of secrets, provider tokens, and full database URLs.
+- [x] Add development-only timing around current-user resolution, game loading, rule validation, and persistence.
+- [x] Record the baseline number of database operations for GET game and POST move.
+- [x] Separate Next.js compilation time from application-code time.
+- [x] Capture warm request timings against the configured PostgreSQL database.
+- [x] Keep logs free of secrets, provider tokens, and full database URLs.
 
 ## Stage 02. Lightweight Request Identity
 
-- [ ] Resolve the active Clerk provider user ID from the session without fetching the full Clerk profile on every game request.
-- [ ] Look up the existing internal user and identity with a read-only fast path.
-- [ ] Run full local user, profile, and default-rating synchronization only when the identity is missing or an explicit refresh is needed.
-- [ ] Avoid updating `lastSeenAt`, profile fields, identity, and rating on every move.
-- [ ] Preserve webhook-free first-login behavior.
-- [ ] Add tests for existing-user fast path and first-login fallback.
+- [x] Resolve the active Clerk provider user ID from the session without fetching the full Clerk profile on every game request.
+- [x] Look up the existing internal user and identity with a read-only fast path.
+- [x] Run full local user, profile, and default-rating synchronization only when the identity is missing or an explicit refresh is needed.
+- [x] Avoid updating `lastSeenAt`, profile fields, identity, and rating on every move.
+- [x] Preserve webhook-free first-login behavior.
+- [x] Add tests for existing-user fast path and first-login fallback.
 
 ## Stage 03. Compact Game Read and Move Persistence
 
-- [ ] Remove duplicate snapshot reads from normal move submission.
-- [ ] Check idempotency without adding a separate routine round trip.
-- [ ] Persist the move and game state atomically with optimistic concurrency protection.
-- [ ] Return the updated snapshot without an avoidable second reload.
-- [ ] Preserve checkmate, stalemate, insufficient-material, and immutable-completed-game behavior.
-- [ ] Add tests for retries and concurrent state conflicts.
+- [x] Remove duplicate snapshot reads from normal move submission.
+- [x] Check idempotency without adding a separate routine round trip.
+- [x] Persist the move and game state atomically with optimistic concurrency protection.
+- [x] Return the updated snapshot without an avoidable second reload.
+- [x] Preserve checkmate, stalemate, insufficient-material, and immutable-completed-game behavior.
+- [x] Add tests for retries and concurrent state conflicts.
 
 ## Stage 04. Immediate Client Feedback
 
-- [ ] Confirm drag/drop and click-to-move update the board before the HTTP response.
-- [ ] Keep the authoritative server response as the final state.
-- [ ] Roll back to the previous FEN on rejection or network failure.
-- [ ] Avoid blocking unrelated status rendering while a move is pending.
-- [ ] Show a subtle pending or slow-connection state without delaying the piece animation.
-- [ ] Preserve mobile board dimensions and input behavior.
+- [x] Confirm drag/drop and click-to-move update the board before the HTTP response.
+- [x] Keep the authoritative server response as the final state.
+- [x] Roll back to the previous FEN on rejection or network failure.
+- [x] Avoid blocking unrelated status rendering while a move is pending.
+- [x] Show a subtle pending or slow-connection state without delaying the piece animation.
+- [x] Preserve mobile board dimensions and input behavior.
 
 ## Stage 05. Verification and Realtime Readiness
 
-- [ ] Re-run warm GET and POST timing measurements and compare them with the baseline.
-- [ ] Confirm the reduced database-operation count.
-- [ ] Run lint, typecheck, unit tests, production build, and the persisted Playwright flow.
-- [ ] Document the remaining latency budget that Socket.IO and server clock work must address for blitz and bullet.
-- [ ] Update architecture and roadmap handoff to Feature 03.
+- [x] Re-run warm GET and POST timing measurements and compare them with the baseline.
+- [x] Confirm the reduced database-operation count.
+- [x] Run lint, typecheck, unit tests, production build, and the persisted Playwright flow.
+- [x] Document the remaining latency budget that Socket.IO and server clock work must address for blitz and bullet.
+- [x] Update architecture and roadmap handoff to Feature 03.
+
+## Measured Result
+
+Development-only `[game-performance]` logs report application time separately from the Next.js request summary and include only phase names, durations, and database-operation names.
+
+Against the configured remote PostgreSQL database on June 28, 2026:
+
+- the warm GET baseline was roughly 1.5–2.0 seconds with 6 counted database calls; after hardening, the repeated warm GET was about 0.5 seconds with 2 calls;
+- the normal POST move baseline was roughly 2.25–2.36 seconds with 12 counted calls; after hardening, normal moves were about 0.91–1.07 seconds with 5 counted calls, or 6 when completing a game;
+- repeated user synchronization previously consumed roughly 1.05–1.31 seconds per request; the existing-user path is now one read-only identity/user/rating lookup and performs no routine profile, `lastSeenAt`, identity, or rating writes;
+- chess rule validation remained about 1–4 milliseconds, confirming that remote request and persistence round trips were the bottleneck.
+
+The HTTP path now meets the development target for manual and computer play. It does not remove the later realtime budget: blitz and bullet still require Socket.IO delivery, authoritative server clocks, reconnect recovery, and premove handling so opponent updates and clock events do not wait on a full persisted HTTP round trip.
 
 ## Feature Completion Criteria
 
-- [ ] The user's own legal move appears immediately on the board.
-- [ ] Existing users use the lightweight request-identity path.
-- [ ] Move submission avoids duplicate snapshot reads and repeated user writes.
-- [ ] Move persistence remains atomic and idempotent.
-- [ ] Warm request measurements meet the target or document an external bottleneck with evidence.
-- [ ] Existing unit and Playwright game-flow tests pass.
-- [ ] Documentation points to Feature 03.
+- [x] The user's own legal move appears immediately on the board.
+- [x] Existing users use the lightweight request-identity path.
+- [x] Move submission avoids duplicate snapshot reads and repeated user writes.
+- [x] Move persistence remains atomic and idempotent.
+- [x] Warm request measurements meet the target or document an external bottleneck with evidence.
+- [x] Existing unit and Playwright game-flow tests pass.
+- [x] Documentation points to Feature 03.
 
 ## Next Task
 
-Start Stage 01 by measuring the current request phases and database-operation count for one warm GET game request and one warm POST move request.
+Continue with [Feature 03. Play Against Computer and Early Analysis](./03-computer-play-analysis.md).
