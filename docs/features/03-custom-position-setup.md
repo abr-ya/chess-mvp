@@ -37,19 +37,27 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Stage 04. Verification and Handoff
 
-- [ ] Add browser coverage for visual setup and FEN round-trip.
-- [ ] Run lint, typecheck, unit tests, and production build.
-- [ ] Document the validated-position handoff for Feature 05.
-- [ ] Point the roadmap to Feature 04.
+- [x] Add browser coverage for visual setup and FEN round-trip.
+- [x] Run lint, typecheck, unit tests, and production build.
+- [x] Document the validated-position handoff for Feature 05.
+- [x] Point the roadmap to Feature 04.
+
+## Validated-Position Handoff
+
+- `EditablePosition` is the editor-owned mutable value and remains independent of React and the chessboard package.
+- `parseFen(fen)` is the input boundary. Consumers must continue only when it returns `{ ok: true, position }`.
+- `validateEditablePosition(position)` validates state changed through editor controls.
+- `toFen(position)` is the serialized handoff value for Feature 05 `EngineService`; the engine feature must not depend on editor component state.
+- Feature 05 may add stricter engine-specific legality checks at its boundary without moving Stockfish concerns into Feature 03.
 
 ## Feature Completion Criteria
 
-- [ ] A user can construct a position visually.
-- [ ] FEN import and export round-trip without losing state.
-- [ ] Invalid positions show actionable errors.
-- [ ] The editor does not depend on Stockfish.
-- [ ] Automated checks pass.
+- [x] A user can construct a position visually.
+- [x] FEN import and export round-trip without losing state.
+- [x] Invalid positions show actionable errors.
+- [x] The editor does not depend on Stockfish.
+- [x] Automated checks pass.
 
 ## Next Task
 
-Start Stage 04 with browser coverage for visual setup and FEN round-trip.
+Start Stage 01 of Feature 04 by defining PGN import and export domain contracts.

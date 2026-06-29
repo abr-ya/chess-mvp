@@ -23,9 +23,9 @@ Initial product documentation for the chess platform MVP.
 - [Feature 02-a. Game Loop Performance Hardening](./features/02-a-game-loop-performance.md)
   Completed hardening for the authenticated game request path.
 - [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md)
-  Active executable plan for visual position construction and FEN workflows.
+  Completed visual position construction and validated FEN workflow.
 - [Feature 04. PGN File Import and Export](./features/04-pgn-file-import-export.md)
-  Planned file-transfer boundary for complete games.
+  Active executable plan for complete-game file transfer.
 - [Feature 05. Engine Integration and Position Evaluation](./features/05-engine-position-evaluation.md)
   Planned reusable engine boundary, score, and best move.
 - [Feature 06. Play Against Computer](./features/06-play-against-computer.md)
@@ -41,4 +41,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 04 of Feature 03 with browser coverage for visual setup and FEN round-trip.
+Start Stage 01 of Feature 04 by defining PGN import and export domain contracts.

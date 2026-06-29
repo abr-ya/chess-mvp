@@ -56,11 +56,13 @@ Feature 02-a is complete. It reduced routine user synchronization, compacted mov
 
 Detailed feature plan: [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md)
 
+Feature 03 is complete. It provides a reusable visual position editor and validated FEN boundary for later engine workflows.
+
 - [x] Visual position editor and piece palette.
 - [x] Clear and reset board actions.
 - [x] Side-to-move and castling controls.
 - [x] FEN import, validation, copy, and export.
-- [ ] Reusable validated-position handoff for later analysis.
+- [x] Reusable validated-position handoff for later analysis.
 
 ## Feature 04. PGN File Import and Export
 
@@ -221,4 +223,4 @@ Detailed feature plan: [Feature 06. Play Against Computer](./features/06-play-ag
 
 ## Next Task
 
-Start Stage 03 of Feature 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.
+Start Stage 01 of Feature 04 by defining PGN import and export domain contracts.
