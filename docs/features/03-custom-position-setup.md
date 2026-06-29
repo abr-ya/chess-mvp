@@ -30,10 +30,10 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Stage 03. Position Controls and FEN
 
-- [ ] Add side-to-move and castling controls.
-- [ ] Add FEN input, validation feedback, copy, and load actions.
-- [ ] Keep board state and FEN synchronized.
-- [ ] Add a dedicated `/analysis/setup` entry route.
+- [x] Add side-to-move and castling controls.
+- [x] Add FEN input, validation feedback, copy, and load actions.
+- [x] Keep board state and FEN synchronized.
+- [x] Add a dedicated `/analysis/setup` entry route.
 
 ## Stage 04. Verification and Handoff
 
@@ -52,4 +52,4 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Next Task
 
-Start Stage 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.
+Start Stage 04 with browser coverage for visual setup and FEN round-trip.

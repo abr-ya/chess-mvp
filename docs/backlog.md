@@ -56,10 +56,10 @@ Feature 02-a is complete. It reduced routine user synchronization, compacted mov
 
 Detailed feature plan: [Feature 03. Custom Position Setup and FEN](./features/03-custom-position-setup.md)
 
-- [ ] Visual position editor and piece palette.
-- [ ] Clear and reset board actions.
-- [ ] Side-to-move and castling controls.
-- [ ] FEN import, validation, copy, and export.
+- [x] Visual position editor and piece palette.
+- [x] Clear and reset board actions.
+- [x] Side-to-move and castling controls.
+- [x] FEN import, validation, copy, and export.
 - [ ] Reusable validated-position handoff for later analysis.
 
 ## Feature 04. PGN File Import and Export

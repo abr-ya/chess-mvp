@@ -41,4 +41,4 @@ Initial product documentation for the chess platform MVP.
 
 ## Next Task
 
-Start Stage 03 of Feature 03 by adding position controls, synchronized FEN input, and the `/analysis/setup` route.
+Start Stage 04 of Feature 03 with browser coverage for visual setup and FEN round-trip.
