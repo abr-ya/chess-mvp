@@ -1,0 +1,127 @@
+import { DEFAULT_POSITION } from "chess.js";
+import { describe, expect, it } from "vitest";
+
+import {
+  createEmptyPosition,
+  createInitialPosition,
+  movePositionPiece,
+  parseFen,
+  setPositionPiece,
+  toFen,
+  validateEditablePosition,
+} from "./editable-position";
+
+describe("editable position FEN conversion", () => {
+  it("round-trips the initial position", () => {
+    expect(toFen(createInitialPosition())).toBe(DEFAULT_POSITION);
+  });
+
+  it("round-trips a custom position and all FEN state fields", () => {
+    const fen = "4k3/8/8/3pP3/8/8/8/4K3 w - d6 7 42";
+    const result = parseFen(fen);
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.position.sideToMove).toBe("white");
+      expect(result.position.enPassantTarget).toBe("d6");
+      expect(result.position.halfmoveClock).toBe(7);
+      expect(result.position.fullmoveNumber).toBe(42);
+      expect(toFen(result.position)).toBe(fen);
+    }
+  });
+
+  it("serializes an empty editor without pretending it is playable", () => {
+    const position = createEmptyPosition();
+
+    expect(toFen(position)).toBe("8/8/8/8/8/8/8/8 w - - 0 1");
+    expect(validateEditablePosition(position)).toMatchObject({
+      ok: false,
+      errors: [
+        { code: "KING_COUNT" },
+        { code: "KING_COUNT" },
+      ],
+    });
+  });
+});
+
+describe("editable position changes", () => {
+  it("places, replaces, and removes a piece without mutating the input", () => {
+    const initial = createEmptyPosition();
+    const placed = setPositionPiece(initial, "e4", {
+      color: "white",
+      type: "queen",
+    });
+    const replaced = setPositionPiece(placed, "e4", {
+      color: "black",
+      type: "knight",
+    });
+    const removed = setPositionPiece(replaced, "e4", null);
+
+    expect(initial.pieces.e4).toBeUndefined();
+    expect(placed.pieces.e4).toEqual({ color: "white", type: "queen" });
+    expect(replaced.pieces.e4).toEqual({ color: "black", type: "knight" });
+    expect(removed.pieces.e4).toBeUndefined();
+  });
+
+  it("moves a piece, replaces the target, and supports drag-off removal", () => {
+    const initial = createInitialPosition();
+    const moved = movePositionPiece(initial, "a1", "a8");
+    const removed = movePositionPiece(moved, "a8", null);
+
+    expect(initial.pieces.a1).toEqual({ color: "white", type: "rook" });
+    expect(moved.pieces.a1).toBeUndefined();
+    expect(moved.pieces.a8).toEqual({ color: "white", type: "rook" });
+    expect(removed.pieces.a8).toBeUndefined();
+  });
+});
+
+describe("editable position validation", () => {
+  it.each([
+    ["missing rank", "8/8/8/8/8/8/4K3 w - - 0 1", "INVALID_FEN"],
+    ["invalid side", "4k3/8/8/8/8/8/8/4K3 x - - 0 1", "INVALID_FEN"],
+    ["pawn on edge", "P3k3/8/8/8/8/8/8/4K3 w - - 0 1", "INVALID_FEN"],
+    ["fractional counter", "4k3/8/8/8/8/8/8/4K3 w - - 1.5 2", "INVALID_COUNTER"],
+  ])("rejects %s", (_label, fen, code) => {
+    expect(parseFen(fen)).toMatchObject({
+      ok: false,
+      errors: [{ code }],
+    });
+  });
+
+  it("rejects castling rights without the required rook", () => {
+    const position = createInitialPosition();
+    delete position.pieces.h1;
+
+    expect(validateEditablePosition(position)).toMatchObject({
+      ok: false,
+      errors: [
+        expect.objectContaining({ code: "INVALID_CASTLING_RIGHT" }),
+      ],
+    });
+  });
+
+  it("rejects more than eight pawns for one side", () => {
+    const position = createEmptyPosition();
+    position.pieces.e1 = { color: "white", type: "king" };
+    position.pieces.e8 = { color: "black", type: "king" };
+
+    for (const square of [
+      "a2",
+      "b2",
+      "c2",
+      "d2",
+      "e2",
+      "f2",
+      "g2",
+      "h2",
+      "a3",
+    ] as const) {
+      position.pieces[square] = { color: "white", type: "pawn" };
+    }
+
+    expect(validateEditablePosition(position)).toMatchObject({
+      ok: false,
+      errors: [expect.objectContaining({ code: "PAWN_COUNT" })],
+    });
+  });
+});

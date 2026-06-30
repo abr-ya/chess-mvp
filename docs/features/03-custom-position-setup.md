@@ -16,40 +16,48 @@ Stop when a user can build a valid position on the board, round-trip it through 
 
 ## Stage 01. Position Domain
 
-- [ ] Define editable-position state independent of the chessboard package.
-- [ ] Convert editable state to and from FEN.
-- [ ] Validate king count, pawn placement, side to move, castling rights, and FEN structure.
-- [ ] Add unit tests for valid, invalid, empty, and edge-case positions.
+- [x] Define editable-position state independent of the chessboard package.
+- [x] Convert editable state to and from FEN.
+- [x] Validate king count, pawn placement, side to move, castling rights, and FEN structure.
+- [x] Add unit tests for valid, invalid, empty, and edge-case positions.
 
 ## Stage 02. Board Editor
 
-- [ ] Add a reusable `PositionSetupBoard` behind the local chessboard boundary.
-- [ ] Support placing, moving, replacing, and removing pieces.
-- [ ] Add piece palette, clear-board, and reset-to-start actions.
-- [ ] Keep desktop, mobile, mouse, and touch interactions usable.
+- [x] Add a reusable `PositionSetupBoard` behind the local chessboard boundary.
+- [x] Support placing, moving, replacing, and removing pieces.
+- [x] Add piece palette, clear-board, and reset-to-start actions.
+- [x] Keep desktop, mobile, mouse, and touch interactions usable.
 
 ## Stage 03. Position Controls and FEN
 
-- [ ] Add side-to-move and castling controls.
-- [ ] Add FEN input, validation feedback, copy, and load actions.
-- [ ] Keep board state and FEN synchronized.
-- [ ] Add a dedicated `/analysis/setup` entry route.
+- [x] Add side-to-move and castling controls.
+- [x] Add FEN input, validation feedback, copy, and load actions.
+- [x] Keep board state and FEN synchronized.
+- [x] Add a dedicated `/analysis/setup` entry route.
 
 ## Stage 04. Verification and Handoff
 
-- [ ] Add browser coverage for visual setup and FEN round-trip.
-- [ ] Run lint, typecheck, unit tests, and production build.
-- [ ] Document the validated-position handoff for Feature 05.
-- [ ] Point the roadmap to Feature 04.
+- [x] Add browser coverage for visual setup and FEN round-trip.
+- [x] Run lint, typecheck, unit tests, and production build.
+- [x] Document the validated-position handoff for Feature 05.
+- [x] Point the roadmap to Feature 04.
+
+## Validated-Position Handoff
+
+- `EditablePosition` is the editor-owned mutable value and remains independent of React and the chessboard package.
+- `parseFen(fen)` is the input boundary. Consumers must continue only when it returns `{ ok: true, position }`.
+- `validateEditablePosition(position)` validates state changed through editor controls.
+- `toFen(position)` is the serialized handoff value for Feature 05 `EngineService`; the engine feature must not depend on editor component state.
+- Feature 05 may add stricter engine-specific legality checks at its boundary without moving Stockfish concerns into Feature 03.
 
 ## Feature Completion Criteria
 
-- [ ] A user can construct a position visually.
-- [ ] FEN import and export round-trip without losing state.
-- [ ] Invalid positions show actionable errors.
-- [ ] The editor does not depend on Stockfish.
-- [ ] Automated checks pass.
+- [x] A user can construct a position visually.
+- [x] FEN import and export round-trip without losing state.
+- [x] Invalid positions show actionable errors.
+- [x] The editor does not depend on Stockfish.
+- [x] Automated checks pass.
 
 ## Next Task
 
-Start Stage 01 by defining the editable-position model and FEN validation rules.
+Start Stage 01 of Feature 04 by defining PGN import and export domain contracts.
