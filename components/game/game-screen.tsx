@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { ChessboardView } from "@/components/chessboard/chessboard-view";
+import { GamePgnActions } from "@/components/game/game-pgn-actions";
 import { NewGameButton } from "@/components/game/new-game-button";
 import { Badge } from "@/components/ui/badge";
 import type { ClientGameSnapshot, ClientGameMove } from "@/lib/game/client-types";
@@ -137,6 +138,7 @@ export function GameScreen({ gameId }: GameScreenProps) {
         {isFinished ? (
           <NewGameButton label="Start another game" className="mt-6" />
         ) : null}
+        <GamePgnActions gameId={game.id} />
       </aside>
     </section>
   );

@@ -24,9 +24,9 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Stage 02. Export
 
-- [ ] Add an authenticated PGN response for accessible games.
-- [ ] Add copy-PGN and download-`.pgn` actions.
-- [ ] Use a safe, predictable filename.
+- [x] Add an authenticated PGN response for accessible games.
+- [x] Add copy-PGN and download-`.pgn` actions.
+- [x] Use a safe, predictable filename.
 
 ## Stage 03. Import
 
@@ -52,4 +52,4 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Next Task
 
-Start Stage 02 by adding an authenticated PGN response for accessible games.
+Start Stage 03 by adding file and pasted-PGN inputs with size limits.
