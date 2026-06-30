@@ -16,11 +16,11 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Stage 01. PGN Domain
 
-- [ ] Define required and optional PGN tags.
-- [ ] Generate PGN from structured game and move records.
-- [ ] Parse PGN with the chess rules library and reject invalid notation.
-- [ ] Reconstruct SAN, UCI, and FEN-after-move values.
-- [ ] Add round-trip and malformed-file tests.
+- [x] Define required and optional PGN tags.
+- [x] Generate PGN from structured game and move records.
+- [x] Parse PGN with the chess rules library and reject invalid notation.
+- [x] Reconstruct SAN, UCI, and FEN-after-move values.
+- [x] Add round-trip and malformed-file tests.
 
 ## Stage 02. Export
 
@@ -52,4 +52,4 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Next Task
 
-After Feature 03, start Stage 01 by defining PGN tags and round-trip rules.
+Start Stage 02 by adding an authenticated PGN response for accessible games.
