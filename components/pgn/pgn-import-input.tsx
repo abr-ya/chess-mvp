@@ -8,6 +8,20 @@ import {
   getPgnImportSize,
   MAX_PGN_IMPORT_BYTES,
 } from "@/lib/pgn/import-input";
+import {
+  previewPgnImport,
+  type PgnImportPreviewResult,
+} from "@/lib/pgn/import-preview";
+
+const PREVIEW_TAGS = [
+  "Event",
+  "Site",
+  "Date",
+  "Round",
+  "White",
+  "Black",
+  "Result",
+] as const;
 
 export function PgnImportInput() {
   const fileInputId = useId();
@@ -15,12 +29,14 @@ export function PgnImportInput() {
   const [source, setSource] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<PgnImportPreviewResult | null>(null);
   const size = getPgnImportSize(source);
   const maxSizeLabel = formatPgnImportBytes(MAX_PGN_IMPORT_BYTES);
 
   async function selectFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     setFileError(null);
+    setPreview(null);
 
     if (!file) {
       return;
@@ -57,6 +73,11 @@ export function PgnImportInput() {
     setSource("");
     setFileName(null);
     setFileError(null);
+    setPreview(null);
+  }
+
+  function showPreview() {
+    setPreview(previewPgnImport(source));
   }
 
   const errorMessage = fileError
@@ -65,8 +86,12 @@ export function PgnImportInput() {
       ? null
       : `The pasted PGN is larger than the ${maxSizeLabel} limit.`;
 
+  const validationError = preview && !preview.ok ? preview.message : null;
+  const displayedError = errorMessage ?? validationError;
+
   return (
-    <section className="border border-[#d9d0c0] bg-white/45 p-5 sm:p-6">
+    <div className="grid gap-6">
+      <section className="border border-[#d9d0c0] bg-white/45 p-5 sm:p-6">
       <div className="grid gap-6 lg:grid-cols-[minmax(240px,0.72fr)_minmax(0,1.28fr)]">
         <div>
           <h2 className="text-lg font-semibold">Choose a PGN file</h2>
@@ -110,10 +135,11 @@ export function PgnImportInput() {
               setSource(event.target.value);
               setFileName(null);
               setFileError(null);
+              setPreview(null);
             }}
             rows={16}
             spellCheck={false}
-            aria-invalid={errorMessage ? true : undefined}
+            aria-invalid={displayedError ? true : undefined}
             aria-describedby="pgn-import-message"
             placeholder={'[Event "Casual Game"]\n[Site "Chess MVP"]\n…\n\n1. e4 e5'}
             className="mt-2 min-h-72 w-full resize-y border border-[#b9a98e] bg-[#fffdf8] p-3 font-mono text-sm leading-6 outline-none transition focus:border-[#766246] focus:ring-2 focus:ring-[#c8b99f]/50 aria-invalid:border-red-700"
@@ -121,22 +147,64 @@ export function PgnImportInput() {
           <div className="mt-3 flex min-h-8 items-center justify-between gap-4">
             <p
               id="pgn-import-message"
-              className={`text-sm ${errorMessage ? "font-medium text-red-700" : "text-[#5d5548]"}`}
+              className={`text-sm ${displayedError ? "font-medium text-red-700" : "text-[#5d5548]"}`}
               aria-live="polite"
             >
-              {errorMessage ?? "The PGN will be validated before import."}
+              {displayedError ??
+                (preview?.ok
+                  ? "PGN is valid and ready for review."
+                  : "The PGN will be validated before import.")}
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={clearInput}
-              disabled={!source && !fileError}
-            >
-              Clear
-            </Button>
+            <div className="flex shrink-0 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={clearInput}
+                disabled={!source && !fileError}
+              >
+                Clear
+              </Button>
+              <Button
+                type="button"
+                onClick={showPreview}
+                disabled={!source.trim() || !size.isWithinLimit}
+              >
+                Preview PGN
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+      </section>
+
+      {preview?.ok ? (
+        <section className="border border-[#b9a98e] bg-[#fffdf8] p-5 sm:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#766246]">
+                Valid PGN
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold">Import preview</h2>
+            </div>
+            <p className="text-sm font-medium text-[#5d5548]">
+              {preview.parsed.moves.length} plies · {Math.ceil(preview.parsed.moves.length / 2)} moves
+            </p>
+          </div>
+
+          <dl className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
+            {PREVIEW_TAGS.map((tag) => (
+              <div key={tag}>
+                <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-[#766246]">
+                  {tag}
+                </dt>
+                <dd className="mt-1 break-words text-sm font-medium text-[#25211c]">
+                  {preview.parsed.tags[tag]}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : null}
+    </div>
   );
 }
