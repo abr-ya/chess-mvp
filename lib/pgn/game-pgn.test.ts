@@ -29,10 +29,17 @@ describe("game PGN export", () => {
       "chess-mvp-game-game-one-dangerous.pgn",
     );
   });
+
+  it("preserves the validated PGN stored for an imported game", () => {
+    const importedPgn = generateGamePgn({ ...game, pgn: "normalized imported PGN" });
+
+    expect(importedPgn).toBe("normalized imported PGN");
+  });
 });
 
 const game: GameSnapshot = {
   id: "game-1",
+  ownerUserId: "user-1",
   mode: "manual",
   status: "completed",
   result: "white_win",

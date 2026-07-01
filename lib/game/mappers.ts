@@ -51,6 +51,7 @@ export type GameMoveRecord = {
 
 export type GameSnapshotRecord = {
   id: string;
+  ownerUserId: string | null;
   mode: PrismaGameModeValue;
   status: PrismaGameStatusValue;
   currentFen: string;
@@ -69,6 +70,7 @@ export function mapGameSnapshotRecord(
 ): GameSnapshot {
   return {
     id: record.id,
+    ownerUserId: record.ownerUserId,
     mode: mapGameMode(record.mode),
     status: mapGameStatus(record.status),
     result: mapGameResult(record.result),

@@ -73,6 +73,7 @@ export type LegalActionSet = {
 
 export type GameSnapshot = {
   id: string;
+  ownerUserId: string | null;
   mode: GameMode;
   status: GameStatus;
   result: GameResult;

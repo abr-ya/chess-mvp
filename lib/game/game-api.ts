@@ -103,17 +103,19 @@ export class GameApi {
       return { ok: false as const, result: gameResult };
     }
 
-    const isParticipant = gameResult.game.participants.some(
-      (participant) => participant.userId === auth.localUser.user.id,
-    );
+    const hasAccess =
+      gameResult.game.ownerUserId === auth.localUser.user.id ||
+      gameResult.game.participants.some(
+        (participant) => participant.userId === auth.localUser.user.id,
+      );
 
-    if (!isParticipant) {
+    if (!hasAccess) {
       return {
         ok: false as const,
         result: apiError(
           403,
           "FORBIDDEN",
-          "You are not a participant in this game.",
+          "You do not have access to this game.",
         ),
       };
     }

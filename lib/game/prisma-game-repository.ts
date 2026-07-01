@@ -29,6 +29,7 @@ export class PrismaGameRepository implements GameRepository {
   async createGame(input: CreateStoredGameInput): Promise<GameSnapshot> {
     const record = await this.database("game.create", () => prisma.game.create({
       data: {
+        ownerUserId: input.ownerUserId,
         mode: GameMode.MANUAL,
         status: GameStatus.ACTIVE,
         currentFen: input.initialFen,

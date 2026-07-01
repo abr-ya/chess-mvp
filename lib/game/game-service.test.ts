@@ -242,6 +242,7 @@ class MemoryGameRepository implements GameRepository {
     const now = new Date("2026-06-27T00:00:00.000Z");
     this.game = {
       id: "game-1",
+      ownerUserId: input.ownerUserId,
       mode: "manual",
       status: "active",
       result: null,

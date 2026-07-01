@@ -3,6 +3,10 @@ import type { GameSnapshot, TerminationReason } from "@/lib/game/types";
 import { generatePgn, type PgnResult, type PgnTags } from "./pgn";
 
 export function generateGamePgn(game: GameSnapshot) {
+  if (game.pgn) {
+    return game.pgn;
+  }
+
   const white = game.participants.find((participant) => participant.side === "white");
   const black = game.participants.find((participant) => participant.side === "black");
   const tags: PgnTags = {

@@ -1,6 +1,7 @@
 "use client";
 
 import { type ChangeEvent, useId, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
   previewPgnImport,
   type PgnImportPreviewResult,
 } from "@/lib/pgn/import-preview";
+import { readJsonResponse } from "@/lib/game/game-client-http";
 
 const PREVIEW_TAGS = [
   "Event",
@@ -24,12 +26,15 @@ const PREVIEW_TAGS = [
 ] as const;
 
 export function PgnImportInput() {
+  const router = useRouter();
   const fileInputId = useId();
   const pasteInputId = useId();
   const [source, setSource] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [preview, setPreview] = useState<PgnImportPreviewResult | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
   const size = getPgnImportSize(source);
   const maxSizeLabel = formatPgnImportBytes(MAX_PGN_IMPORT_BYTES);
 
@@ -37,6 +42,7 @@ export function PgnImportInput() {
     const file = event.target.files?.[0];
     setFileError(null);
     setPreview(null);
+    setImportError(null);
 
     if (!file) {
       return;
@@ -74,10 +80,41 @@ export function PgnImportInput() {
     setFileName(null);
     setFileError(null);
     setPreview(null);
+    setImportError(null);
   }
 
   function showPreview() {
+    setImportError(null);
     setPreview(previewPgnImport(source));
+  }
+
+  async function importGame() {
+    if (!preview?.ok || isImporting) {
+      return;
+    }
+
+    setIsImporting(true);
+    setImportError(null);
+
+    try {
+      const response = await fetch("/api/games/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pgn: source }),
+      });
+      const body = await readJsonResponse(response);
+
+      if (!response.ok || !isImportSuccess(body)) {
+        throw new Error(getImportError(body));
+      }
+
+      router.push(`/games/${encodeURIComponent(body.game.id)}`);
+    } catch (error) {
+      setImportError(
+        error instanceof Error ? error.message : "The PGN could not be imported.",
+      );
+      setIsImporting(false);
+    }
   }
 
   const errorMessage = fileError
@@ -136,6 +173,7 @@ export function PgnImportInput() {
               setFileName(null);
               setFileError(null);
               setPreview(null);
+              setImportError(null);
             }}
             rows={16}
             spellCheck={false}
@@ -203,8 +241,53 @@ export function PgnImportInput() {
               </div>
             ))}
           </dl>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#d9d0c0] pt-5">
+            <p className="text-sm text-[#5d5548]">
+              The game and every structured move will be saved together.
+            </p>
+            <Button type="button" onClick={importGame} disabled={isImporting}>
+              {isImporting ? "Importing…" : "Import game"}
+            </Button>
+          </div>
+          {importError ? (
+            <p className="mt-4 text-sm font-medium text-red-700" aria-live="polite">
+              {importError}
+            </p>
+          ) : null}
         </section>
       ) : null}
     </div>
   );
+}
+
+function isImportSuccess(value: unknown): value is { game: { id: string } } {
+  if (typeof value !== "object" || value === null || !("game" in value)) {
+    return false;
+  }
+
+  const game = value.game;
+  return (
+    typeof game === "object" &&
+    game !== null &&
+    "id" in game &&
+    typeof game.id === "string"
+  );
+}
+
+function getImportError(value: unknown) {
+  if (typeof value !== "object" || value === null || !("error" in value)) {
+    return "The PGN could not be imported.";
+  }
+
+  const error = value.error;
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return "The PGN could not be imported.";
 }

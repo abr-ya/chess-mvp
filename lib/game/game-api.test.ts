@@ -39,6 +39,7 @@ describe("GameApi", () => {
     const { api } = createApi({
       game: {
         ...ownedGame,
+        ownerUserId: "another-user",
         participants: [
           { ...ownedGame.participants[0], userId: "another-user" },
           ownedGame.participants[1],
@@ -53,8 +54,25 @@ describe("GameApi", () => {
       status: 403,
       error: {
         code: "FORBIDDEN",
-        message: "You are not a participant in this game.",
+        message: "You do not have access to this game.",
       },
+    });
+  });
+
+  it("returns an imported game to its owner without linking them to a player", async () => {
+    const { api } = createApi({
+      game: {
+        ...ownedGame,
+        participants: ownedGame.participants.map((participant) => ({
+          ...participant,
+          userId: null,
+        })),
+      },
+    });
+
+    expect(await api.getGame("game-1")).toEqual({
+      ok: true,
+      game: expect.objectContaining({ ownerUserId: "user-1" }),
     });
   });
 
@@ -152,6 +170,7 @@ const currentLocalUser: EnsureLocalUserResult = {
 
 const ownedGame: GameSnapshot = {
   id: "game-1",
+  ownerUserId: "user-1",
   mode: "manual",
   status: "active",
   result: null,

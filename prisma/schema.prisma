@@ -66,6 +66,7 @@ model User {
   authIdentities UserAuthIdentity[]
   ratings        Rating[]
   participants   GameParticipant[]
+  ownedGames     Game[]             @relation("OwnedGames")
 }
 
 model UserAuthIdentity {
@@ -112,8 +113,11 @@ model Game {
   participants GameParticipant[]
   moves        Move[]
   timeEvents   TimeEvent[]
+  owner        User?             @relation("OwnedGames", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  ownerUserId  String?
 
   @@index([status, updatedAt])
+  @@index([ownerUserId, createdAt])
 }
 
 model GameParticipant {

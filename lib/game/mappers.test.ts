@@ -18,6 +18,7 @@ describe("game mappers", () => {
 
     const snapshot = mapGameSnapshotRecord({
       id: "game-1",
+      ownerUserId: "user-1",
       mode: GameMode.MANUAL,
       status: GameStatus.COMPLETED,
       currentFen: "8/8/8/8/8/8/8/8 b - - 0 1",
@@ -110,6 +111,7 @@ describe("game mappers", () => {
     expect(() =>
       mapGameSnapshotRecord({
         id: "game-1",
+        ownerUserId: null,
         mode: GameMode.MANUAL,
         status: GameStatus.ACTIVE,
         currentFen: "8/8/8/8/8/8/8/8 w - - 0 1",
