@@ -30,7 +30,7 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Stage 03. Import
 
-- [ ] Add file selection and paste-PGN inputs with size limits.
+- [x] Add file selection and paste-PGN inputs with size limits.
 - [ ] Preview headers and validation errors before import.
 - [ ] Persist an imported game and its structured moves atomically.
 - [ ] Prevent duplicate submission through an idempotency key.
@@ -52,4 +52,4 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Next Task
 
-Start Stage 03 by adding file and pasted-PGN inputs with size limits.
+Continue Stage 03 by previewing PGN headers and validation errors before import.
