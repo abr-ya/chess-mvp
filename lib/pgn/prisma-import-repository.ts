@@ -20,43 +20,83 @@ const importedGameInclude = {
 
 export class PrismaPgnImportRepository implements PgnImportRepository {
   async persistImportedGame(input: PersistImportedGameInput) {
-    const record = await prisma.game.create({
-      data: {
-        ownerUserId: input.ownerUserId,
-        mode: GameMode.MANUAL,
-        status: toGameStatus(input.status),
-        currentFen: input.parsed.finalFen,
-        result: toGameResult(input.result),
-        terminationReason: toTerminationReason(input.terminationReason),
-        pgn: input.parsed.normalizedPgn,
-        completedAt: input.completedAt,
-        participants: {
-          create: [
-            participant(ParticipantSide.WHITE, input.parsed.tags.White, input.result),
-            participant(ParticipantSide.BLACK, input.parsed.tags.Black, input.result),
-          ],
+    try {
+      const record = await prisma.game.create({
+        data: {
+          ownerUserId: input.ownerUserId,
+          importIdempotencyKey: input.idempotencyKey,
+          mode: GameMode.MANUAL,
+          status: toGameStatus(input.status),
+          currentFen: input.parsed.finalFen,
+          result: toGameResult(input.result),
+          terminationReason: toTerminationReason(input.terminationReason),
+          pgn: input.parsed.normalizedPgn,
+          completedAt: input.completedAt,
+          participants: {
+            create: [
+              participant(
+                ParticipantSide.WHITE,
+                input.parsed.tags.White,
+                input.result,
+              ),
+              participant(
+                ParticipantSide.BLACK,
+                input.parsed.tags.Black,
+                input.result,
+              ),
+            ],
+          },
+          moves: {
+            create: input.parsed.moves.map((move) => ({
+              moveNumber: move.ply,
+              side:
+                move.side === "white"
+                  ? ParticipantSide.WHITE
+                  : ParticipantSide.BLACK,
+              from: move.from,
+              to: move.to,
+              promotion: move.promotion,
+              uci: move.uci,
+              san: move.san,
+              fenAfter: move.fenAfter,
+            })),
+          },
         },
-        moves: {
-          create: input.parsed.moves.map((move) => ({
-            moveNumber: move.ply,
-            side:
-              move.side === "white"
-                ? ParticipantSide.WHITE
-                : ParticipantSide.BLACK,
-            from: move.from,
-            to: move.to,
-            promotion: move.promotion,
-            uci: move.uci,
-            san: move.san,
-            fenAfter: move.fenAfter,
-          })),
-        },
-      },
-      include: importedGameInclude,
-    });
+        include: importedGameInclude,
+      });
 
-    return mapGameSnapshotRecord(record);
+      return mapGameSnapshotRecord(record);
+    } catch (error) {
+      if (!isUniqueConstraintError(error)) {
+        throw error;
+      }
+
+      const existing = await prisma.game.findUnique({
+        where: {
+          ownerUserId_importIdempotencyKey: {
+            ownerUserId: input.ownerUserId,
+            importIdempotencyKey: input.idempotencyKey,
+          },
+        },
+        include: importedGameInclude,
+      });
+
+      if (!existing) {
+        throw error;
+      }
+
+      return mapGameSnapshotRecord(existing);
+    }
   }
+}
+
+function isUniqueConstraintError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "P2002"
+  );
 }
 
 function participant(

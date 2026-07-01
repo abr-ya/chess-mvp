@@ -36,8 +36,16 @@ export class PgnImportApi {
       return apiError(401, "UNAUTHENTICATED", "Sign in to continue.");
     }
 
-    if (!isRecord(body) || typeof body.pgn !== "string") {
-      return apiError(400, "INVALID_REQUEST", "A PGN string is required.");
+    if (
+      !isRecord(body) ||
+      typeof body.pgn !== "string" ||
+      !isIdempotencyKey(body.idempotencyKey)
+    ) {
+      return apiError(
+        400,
+        "INVALID_REQUEST",
+        "A PGN string and idempotency key are required.",
+      );
     }
 
     try {
@@ -45,6 +53,7 @@ export class PgnImportApi {
         ok: true,
         game: await this.dependencies.importService.importGame(
           localUser.user.id,
+          body.idempotencyKey,
           body.pgn,
         ),
       };
@@ -85,4 +94,12 @@ function apiError(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isIdempotencyKey(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.trim().length > 0 &&
+    value.length <= 128
+  );
 }

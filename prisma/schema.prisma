@@ -99,16 +99,17 @@ model Rating {
 }
 
 model Game {
-  id                String             @id @default(cuid())
-  mode              GameMode           @default(MANUAL)
-  status            GameStatus         @default(ACTIVE)
-  currentFen        String
-  result            GameResult?
-  terminationReason TerminationReason?
-  pgn               String?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  completedAt       DateTime?
+  id                   String             @id @default(cuid())
+  mode                 GameMode           @default(MANUAL)
+  status               GameStatus         @default(ACTIVE)
+  currentFen           String
+  result               GameResult?
+  terminationReason    TerminationReason?
+  pgn                  String?
+  importIdempotencyKey String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  completedAt          DateTime?
 
   participants GameParticipant[]
   moves        Move[]
@@ -116,6 +117,7 @@ model Game {
   owner        User?             @relation("OwnedGames", fields: [ownerUserId], references: [id], onDelete: SetNull)
   ownerUserId  String?
 
+  @@unique([ownerUserId, importIdempotencyKey])
   @@index([status, updatedAt])
   @@index([ownerUserId, createdAt])
 }

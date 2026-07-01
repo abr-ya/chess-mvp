@@ -33,6 +33,7 @@ export function PgnImportInput() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [preview, setPreview] = useState<PgnImportPreviewResult | null>(null);
+  const [idempotencyKey, setIdempotencyKey] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const size = getPgnImportSize(source);
@@ -42,6 +43,7 @@ export function PgnImportInput() {
     const file = event.target.files?.[0];
     setFileError(null);
     setPreview(null);
+    setIdempotencyKey(null);
     setImportError(null);
 
     if (!file) {
@@ -80,16 +82,19 @@ export function PgnImportInput() {
     setFileName(null);
     setFileError(null);
     setPreview(null);
+    setIdempotencyKey(null);
     setImportError(null);
   }
 
   function showPreview() {
     setImportError(null);
-    setPreview(previewPgnImport(source));
+    const nextPreview = previewPgnImport(source);
+    setPreview(nextPreview);
+    setIdempotencyKey(nextPreview.ok ? crypto.randomUUID() : null);
   }
 
   async function importGame() {
-    if (!preview?.ok || isImporting) {
+    if (!preview?.ok || !idempotencyKey || isImporting) {
       return;
     }
 
@@ -100,7 +105,7 @@ export function PgnImportInput() {
       const response = await fetch("/api/games/import", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pgn: source }),
+        body: JSON.stringify({ pgn: source, idempotencyKey }),
       });
       const body = await readJsonResponse(response);
 
@@ -129,8 +134,8 @@ export function PgnImportInput() {
   return (
     <div className="grid gap-6">
       <section className="border border-[#d9d0c0] bg-white/45 p-5 sm:p-6">
-      <div className="grid gap-6 lg:grid-cols-[minmax(240px,0.72fr)_minmax(0,1.28fr)]">
-        <div>
+        <div className="grid gap-6 lg:grid-cols-[minmax(240px,0.72fr)_minmax(0,1.28fr)]">
+          <div>
           <h2 className="text-lg font-semibold">Choose a PGN file</h2>
           <p className="mt-2 text-sm leading-6 text-[#5d5548]">
             Select a plain-text <code>.pgn</code> file up to {maxSizeLabel}. Its
@@ -154,9 +159,9 @@ export function PgnImportInput() {
               Loaded <span className="font-semibold text-[#25211c]">{fileName}</span>
             </p>
           ) : null}
-        </div>
+          </div>
 
-        <div>
+          <div>
           <div className="flex items-end justify-between gap-4">
             <label htmlFor={pasteInputId} className="text-lg font-semibold">
               Or paste PGN
@@ -173,6 +178,7 @@ export function PgnImportInput() {
               setFileName(null);
               setFileError(null);
               setPreview(null);
+              setIdempotencyKey(null);
               setImportError(null);
             }}
             rows={16}
@@ -211,8 +217,8 @@ export function PgnImportInput() {
               </Button>
             </div>
           </div>
+          </div>
         </div>
-      </div>
       </section>
 
       {preview?.ok ? (

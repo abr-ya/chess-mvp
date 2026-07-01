@@ -30,14 +30,31 @@ describe("PgnImportApi", () => {
     expect(importService.importGame).not.toHaveBeenCalled();
   });
 
+  it("requires an idempotency key", async () => {
+    const { api, importService } = createApi();
+
+    expect(await api.importGame({ pgn: "valid pgn" })).toMatchObject({
+      ok: false,
+      status: 400,
+      error: { code: "INVALID_REQUEST" },
+    });
+    expect(importService.importGame).not.toHaveBeenCalled();
+  });
+
   it("imports for the current local user", async () => {
     const { api, importService } = createApi();
 
-    expect(await api.importGame({ pgn: "valid pgn" })).toEqual({
+    expect(
+      await api.importGame({ pgn: "valid pgn", idempotencyKey: "import-1" }),
+    ).toEqual({
       ok: true,
       game: importedGame,
     });
-    expect(importService.importGame).toHaveBeenCalledWith("user-1", "valid pgn");
+    expect(importService.importGame).toHaveBeenCalledWith(
+      "user-1",
+      "import-1",
+      "valid pgn",
+    );
   });
 
   it("returns parser errors without leaking persistence details", async () => {
@@ -46,7 +63,9 @@ describe("PgnImportApi", () => {
       new PgnImportServiceError("INVALID_PGN", "Required tag Event is missing."),
     );
 
-    expect(await api.importGame({ pgn: "bad" })).toEqual({
+    expect(
+      await api.importGame({ pgn: "bad", idempotencyKey: "import-1" }),
+    ).toEqual({
       ok: false,
       status: 422,
       error: {

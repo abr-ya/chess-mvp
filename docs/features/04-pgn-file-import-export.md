@@ -33,7 +33,7 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 - [x] Add file selection and paste-PGN inputs with size limits.
 - [x] Preview headers and validation errors before import.
 - [x] Persist an imported game and its structured moves atomically.
-- [ ] Prevent duplicate submission through an idempotency key.
+- [x] Prevent duplicate submission through an idempotency key.
 
 ## Stage 04. Basic Review and Verification
 
@@ -52,4 +52,4 @@ Stop when one valid PGN can be exported, imported, persisted safely, and replaye
 
 ## Next Task
 
-Finish Stage 03 by preventing duplicate import submissions with an idempotency key.
+Start Stage 04 by adding move navigation for an imported game.

@@ -7,6 +7,7 @@ import type { ParsedPgn } from "./pgn";
 
 export type PersistImportedGameInput = {
   ownerUserId: string;
+  idempotencyKey: string;
   parsed: ParsedPgn;
   status: "active" | "completed";
   result: GameResult;
@@ -33,7 +34,11 @@ export class PgnImportServiceError extends Error {
 export class PgnImportService {
   constructor(private readonly repository: PgnImportRepository) {}
 
-  async importGame(ownerUserId: string, source: string): Promise<GameSnapshot> {
+  async importGame(
+    ownerUserId: string,
+    idempotencyKey: string,
+    source: string,
+  ): Promise<GameSnapshot> {
     const preview = previewPgnImport(source);
 
     if (!preview.ok) {
@@ -48,6 +53,7 @@ export class PgnImportService {
 
     return this.repository.persistImportedGame({
       ownerUserId,
+      idempotencyKey,
       parsed: preview.parsed,
       status,
       result,
